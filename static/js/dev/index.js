@@ -19,6 +19,6 @@ let callbackCreator = function (socket) {
 
 $(document).ready(function () {
     // Socket.io demo
-  let socket = io('http://localhost:5000/api')
+  let socket = io('http://localhost:2019/api')
   socket.on('connect', callbackCreator(socket))
 })
