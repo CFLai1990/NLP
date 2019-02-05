@@ -4,13 +4,13 @@ window.$ = $
 
 let callbackCreator = function (socket) {
   let callback = function () {
-    socket.on('Hello', function (msg) {
+    socket.on('Test', function (msg) {
       console.log(msg)
     })
     $('#nlptest-submit').on('click', function () {
       let text = $('#nlptest-input').val()
       if (text !== '' || undefined) {
-        socket.emit('Hello', text)
+        socket.emit('Test', text)
       }
     })
   }
@@ -19,6 +19,6 @@ let callbackCreator = function (socket) {
 
 $(document).ready(function () {
     // Socket.io demo
-  let socket = io('http://localhost:2019/api')
+  let socket = io('http://localhost:2019/api/annotation')
   socket.on('connect', callbackCreator(socket))
 })
