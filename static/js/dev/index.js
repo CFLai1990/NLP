@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 import $ from 'jquery'
 window.$ = $
+let VERSION = 'db'
 
 let callbackCreator = function (socket) {
   let callback = function () {
@@ -19,6 +20,16 @@ let callbackCreator = function (socket) {
 
 $(document).ready(function () {
     // Socket.io demo
-  let socket = io('http://localhost:2019/api/annotation')
+  let socket
+  switch (VERSION) {
+    case 'local':
+      socket = io('http://localhost:2019/api/annotation')
+      break
+    case 'db':
+      socket = io('http://192.168.10.9:2019/api/annotation')
+      break
+    case 'websocket':
+      break
+  }
   socket.on('connect', callbackCreator(socket))
 })
