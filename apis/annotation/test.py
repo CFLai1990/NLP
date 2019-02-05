@@ -9,9 +9,9 @@ class apiClass(API):
     API.__init__(self, logger, socket, message, namespace)
 
   def NLP(self, text):
-    doc = nlp(text.encode('UTF-8'))
+    doc = nlp(text)
 
-  def exec(self, text):
+  def execute(self, text):
     # save the text into file
     self.NLP(text)
     self.socket.emit(self.message, 'NLP executed!', namespace=self.namespace)
