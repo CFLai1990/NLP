@@ -2,7 +2,7 @@ from flask_socketio import emit
 from .__settings__ import API
 import spacy
 
-nlp = spacy.load('en_coref_md')
+nlp = spacy.load(str('en_coref_md'))
 
 class apiClass(API):
   def __init__(self, logger, socket, message, namespace):
