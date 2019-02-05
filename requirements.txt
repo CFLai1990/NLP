@@ -1,5 +1,6 @@
 Fabric
 Flask>=1.0.2
+eventlet
 Flask-SQLAlchemy
 Flask-WTF
 Flask-SocketIO
