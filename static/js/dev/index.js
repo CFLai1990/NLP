@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import MSocket from './msgsocket.js'
 let $ = window.$
-let VERSION = 'local'
+let VERSION = 'dl'
 
 $(document).ready(function () {
     // Socket.io demo
