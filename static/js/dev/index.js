@@ -1,6 +1,5 @@
 import io from 'socket.io-client'
-import $ from 'jquery'
-window.$ = $
+let $ = window.$
 let VERSION = 'db'
 
 let callbackCreator = function (socket) {
