@@ -14,6 +14,6 @@ class apiClass(API):
   def execute(self, text):
     # save the text into file
     self.NLP(text)
-    test=[1,2,3]
+    test=[{'class': 3, 'data': [[[1,2],[3,4]],[[5,6],[7,8]]]}, {'class': 4, 'data': [[[1,2],[3,4]],[[5,6],[7,8]]]}]
     self.socket.emit(self.message, test, namespace=self.namespace)
     self.logger.info('API executed')
