@@ -14,5 +14,6 @@ class apiClass(API):
   def execute(self, text):
     # save the text into file
     self.NLP(text)
-    self.socket.emit(self.message, 'NLP executed!', namespace=self.namespace)
+    test=[1,2,3]
+    self.socket.emit(self.message, test, namespace=self.namespace)
     self.logger.info('API executed')
