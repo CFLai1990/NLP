@@ -10,6 +10,7 @@ class apiClass(API):
 
   def NLP(self, text):
     doc = nlp(text)
+    test = 1
 
   def execute(self, text):
     # save the text into file
