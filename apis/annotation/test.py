@@ -1,18 +1,16 @@
-from flask_socketio import emit
 from .__settings__ import API
 import spacy
 
-nlp = spacy.load('en_coref')
-
 class apiClass(API):
-  def __init__(self, logger, socket, message, namespace):
-    API.__init__(self, logger, socket, message, namespace)
+  def __init__(self, parameters):
+    API.__init__(self, parameters)
+    self.nlp = spacy.load('en_coref')
 
   def NLP(self, text):
-    doc = nlp(text)
+    result = self.nlp(text)
+    return result
 
   def execute(self, text):
-    # save the text into file
-    self.NLP(text)
-    self.socket.emit(self.message, 'NLP executed', namespace=self.namespace)
+    result = self.NLP(text)
+    self.emit2Client(result)
     self.logger.info('API executed')

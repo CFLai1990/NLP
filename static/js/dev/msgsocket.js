@@ -1,11 +1,13 @@
 import MLoad from './msguploader.js'
+import Modal from './loading.js'
 
 class MSocket {
-  constructor (socket) {
+  constructor (socket, message) {
     this.socket = socket
-    this.message = 'Test'
+    this.message = message
     this.data = null
     this.mload = new MLoad()
+    this.mdl = new Modal()
   }
   getData (data) {
     this.data = data
@@ -19,15 +21,17 @@ class MSocket {
       this.getData(data)
       if (this.data !== null) {
         this.handleEmit()
+        this.mdl.show(true, 'Running NLP ...')
       }
     })
   }
   handleReceive () {
     this.socket.on(this.message, function (data) {
-      console.log(data)
+      console.info(data)
+      this.mdl.show(false)
     })
   }
-  callback () {
+  onConnect () {
     this.handleUpload()
     this.handleReceive()
   }
