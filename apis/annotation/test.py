@@ -8,6 +8,7 @@ class apiClass(API):
 
   def NLP(self, text):
     result = self.nlp(text)
+    print(type(result))
     return result
 
   def execute(self, text):
