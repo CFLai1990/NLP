@@ -4,7 +4,6 @@ from .__settings__ import APIs, namespace, package, outputDir, eventDict
 class THIS_APIs(APIs):
     'The wrapper for all default APIs'
     def __init__(self, logger, socket):
-      print('1')
       APIs.__init__(self, {
         'namespace': namespace,
         'logger': logger,
@@ -13,5 +12,4 @@ class THIS_APIs(APIs):
         'package': package,
         'outputDir': outputDir
       })
-      print('2')
       self.start()

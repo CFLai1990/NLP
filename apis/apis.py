@@ -29,5 +29,4 @@ class APIs:
 
     def routeByNamespace(self):
       for namespace, APIsClass in routerDict.items():
-        print(namespace)
         apisDict[namespace] = APIsClass(self.logger, self.socket)
