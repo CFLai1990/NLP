@@ -5,13 +5,15 @@ import MSocket from './msgsocket.js'
 */
 const MESSAGE = 'Test'
 const MACHINE = 'dl'
+const VERSION = 'dev'
+// const VERSION = 'public'
 let $ = window.$
 
 $(document).ready(function () {
     // Socket.io demo
   let socket = new ClientIO({
     'address': MACHINE,
-    'port': 2019,
+    'port': VERSION === 'dev' ? 2018 : 2019,
     'namespace': 'api/annotation'
   })
   let fsocket = new MSocket(socket, MESSAGE)
