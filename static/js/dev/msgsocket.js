@@ -28,6 +28,7 @@ class MSocket {
   handleReceive () {
     this.socket.on(this.message, function (data) {
       console.info(data)
+      console.log(this.mdl)
       this.mdl.show(false)
     })
   }
