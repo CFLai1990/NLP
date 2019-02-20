@@ -108,6 +108,6 @@ VERSION = 'dev'
 # Or specify port manually:
 if __name__ == '__main__':
     NLPapis = APIs(app.logger, socketio)
-    portNum = 2019 if VERSION == 'dev' else 2018
+    portNum = 2018 if VERSION == 'dev' else 2019
     port = int(os.environ.get('PORT', portNum))
     socketio.run(app, debug = False, host='0.0.0.0', port=port)
