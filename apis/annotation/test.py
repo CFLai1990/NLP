@@ -16,5 +16,5 @@ class ApiClass(API):
 
     def execute(self, data):
         result = self.nlp(data)
-        self.emit2client(result)
+        self.emit2client('NLP executed for text: ' + data)
         self.logger.info('API executed')
