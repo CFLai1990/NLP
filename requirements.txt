@@ -6,7 +6,10 @@ Flask-WTF
 Flask-SocketIO
 WTForms
 coverage
-spacy==2.0.13
+pandas
+nltk
+stanford-corenlp
+# spacy==2.0.13
 # ecdsa
 # paramiko
 # pycrypto

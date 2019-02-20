@@ -1,17 +1,20 @@
-from .__settings__ import API
+"""test: testing api for NLP"""
 import spacy
+from .__settings__ import API
 
-class apiClass(API):
-  def __init__(self, parameters):
-    API.__init__(self, parameters)
-    self.nlp = spacy.load('en_coref')
+class ApiClass(API):
+    """API Class"""
+    def __init__(self, parameters):
+        API.__init__(self, parameters)
+        self.nlp_model = spacy.load('en_coref')
 
-  def NLP(self, text):
-    result = self.nlp(text)
-    print(type(result))
-    return result
+    def nlp(self, text):
+        """NLP for the given text"""
+        result = self.nlp_model(text)
+        print(type(result))
+        return result
 
-  def execute(self, text):
-    result = self.NLP(text)
-    self.emit2Client(result)
-    self.logger.info('API executed')
+    def execute(self, data):
+        result = self.nlp(data)
+        self.emit2client(result)
+        self.logger.info('API executed')
