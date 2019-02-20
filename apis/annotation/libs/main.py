@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import nltk
 import os, sys
-from stanfordcorenlp import StanfordCoreNLP
+# from stanfordcorenlp import StanfordCoreNLP
 
 shape_list = ["dot", "line", "band", "circle", "rectangle", "triangle", "star"]
 color_list = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "brown", "grey", "black", "white"]
