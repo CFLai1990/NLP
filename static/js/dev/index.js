@@ -1,9 +1,9 @@
 import ClientIO from './csocketio.js'
 import MSocket from './msgsocket.js'
 /* message:
-  'Test': get the nlp of the text
+  'NLP': get the nlp result of the text
 */
-const MESSAGE = 'Test'
+const MESSAGE = 'NLP'
 const MACHINE = 'dl'
 const VERSION = 'dev'
 // const VERSION = 'public'

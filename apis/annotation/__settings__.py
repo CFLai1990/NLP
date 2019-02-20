@@ -9,5 +9,5 @@ OUTPUT_DIR = os.path.abspath('./files/annotation')
 
 # message - apiName
 EVENT_DICT = {
-    'Test': 'test'
+    'NLP': 'nlp'
 }
