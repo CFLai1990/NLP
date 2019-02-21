@@ -65,6 +65,7 @@ def infer_adj_color(token):
                 for child in token.children:
                     if child.dep_ == "auxpass":
                         has_be = True
+                        print('HERE!!!!!!!!!!!')
                 if has_be:
                     # Case 4: [entities] [be] [verb] [prep] [color]
                     return infer_adj_color_subjects(v_token)
