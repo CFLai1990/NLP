@@ -42,8 +42,6 @@ def infer_color(doc, entity_dict):
 def infer_adj_color(token):
     """Infer the entities when the color is an ADJ"""
     # Case 1: [color] [entities]
-    print('  dep: ' + token.dep_)
-    print('  head: ' + token.head.lemma_)
     if token.dep_ == 'amod':
         indices, signs, cont_sign = infer_adj_color_amod(token)
         if cont_sign:
@@ -54,6 +52,12 @@ def infer_adj_color(token):
         v_token = token.head
         return infer_adj_color_subjects(v_token, True)
     # Case 3~6: ... [prep] [color]
+    print('________________________')
+    print('  dep: ' + token.dep_)
+    print('  head: ' + token.head.lemma_)
+    print('  head_type: ' + token.head.dep_)
+    print('  ancestor: ' + token.head.head)
+    print('________________________')
     if token.dep_ == 'pobj' and token.head.dep_ == 'prep':
         v_token = token.head.head
         if not v_token:
