@@ -25,7 +25,7 @@ def infer_color(doc, entity_dict):
             entity_id = 'entity_' + str(e_id)
             color_sign = signs[stored_id]
             print('2')
-            if entity_dict[entity_id] is None:
+            if entity_dict.get(entity_id) is None:
                 print('3')
                 e_token = doc[e_id]
                 print('4')
