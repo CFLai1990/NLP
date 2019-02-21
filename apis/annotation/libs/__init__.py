@@ -1,2 +1,3 @@
 """NLP functions: __init__"""
-from .nlp import nlp_nltk as nlp
+from .main import nlp_nltk
+from .pipeline import NLPPipeline as pipeline

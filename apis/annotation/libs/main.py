@@ -30,7 +30,7 @@ def nlp_nltk(text):
         sentence_list['st_' + str(i)] = sentence
 
     # return output1 sentence_list
-    print("output1: ", sentence_list)
+    # print("output1: ", sentence_list)
 
     tokenized_sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
     # tag sentences and use nltk's Named Entity Chunker
@@ -76,7 +76,7 @@ def nlp_nltk(text):
         }
         named_entities.append(entity)
 
-    print("output2: ", named_entities)
+    # print("output2: ", named_entities)
 
     return sentence_list, named_entities
 

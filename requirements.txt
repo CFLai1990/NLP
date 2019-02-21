@@ -8,7 +8,7 @@ WTForms
 coverage
 pandas
 nltk
-# spacy==2.0.13
+spacy==2.0.13
 # ecdsa
 # paramiko
 # pycrypto
