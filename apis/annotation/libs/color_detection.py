@@ -42,13 +42,13 @@ def infer_color(doc, entity_dict):
 def infer_adj_color(token):
     """Infer the entities when the color is an ADJ"""
     # Case 1: [color] [entities]
+    print('  dep: ' + token.dep_)
+    print('  head: ' + token.head.lemma_)
     if token.dep_ == 'amod':
         indices, signs, cont_sign = infer_adj_color_amod(token)
         if cont_sign:
             return infer_adj_color(token.head)
         return indices, signs
-    print('  dep: ' + token.dep_)
-    print('  head: ' + token.head.lemma_)
     # Case 2: [entities] [be] [color]
     if token.dep_ == 'acomp' and token.head.lemma_ == 'be':
         v_token = token.head
