@@ -12,11 +12,14 @@ def infer_color(doc, entity_dict):
         if std_color is None:
             continue
         # Identify the entities it describes
+        print('color: ' + std_color)
         color_indices.append(t_id)
         indices = []
         signs = []
+        print('1')
         if token.pos_ == 'ADJ':
             indices, signs = infer_adj_color(token)
+        print('2')
         for e_id in indices:
             entity_id = 'entity_' + str(e_id)
             color_sign = signs[e_id]
@@ -37,6 +40,7 @@ def infer_color(doc, entity_dict):
                     entity_dict[entity_id]['color'].update({
                         std_color: color_sign
                     })
+        print('3')
 
 def infer_adj_color(token):
     """Infer the entities when the color is an ADJ"""
