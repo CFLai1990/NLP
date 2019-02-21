@@ -15,15 +15,14 @@ def infer_subjects(token):
     signs = []
     overall_sign = True
     if token.children:
-        print('has children')
         for child in token.children:
             # Case 1: A, B, C, ... [conj] N
             # Example: A, B, and C are ...
-            print(child.lemma_)
             if child.dep_ == "conj":
                 entities.append(token.i)
                 signs.append(True)
                 get_children(child, entities, signs, is_subject=True)
+                continue
             # Case 2: [pron] of A, B, ... [conj] N
             # Example: None of A, B, and C is ...
             if child.dep_ == "prep":
@@ -34,12 +33,16 @@ def infer_subjects(token):
                         if grand_child.dep_ == "pobj":
                             get_children(grand_child, entities, signs,
                                          child_overall_sign, is_subject=True)
+                continue
             # Case 3: 'Both A and B' or 'Neither A or B'
             if child.dep_ == 'preconj':
                 child_text = child.lemma_
                 overall_sign = get_relation(child_text)
+                continue
+            # Others
+            entities.append(token.i)
+            signs.append(True)
     else:
-        print('no children')
         entities.append(token.i)
         signs.append(True)
     # Handle case 3: neither ...
