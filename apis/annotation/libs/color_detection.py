@@ -62,7 +62,7 @@ def infer_adj_color(token):
                 return infer_adj_color_subjects(v_token, True)
             if v_token.lemma_ != 'be':
                 has_be = False
-                for child in token.children:
+                for child in v_token.children:
                     if child.dep_ == "auxpass":
                         has_be = True
                         print('HERE!!!!!!!!!!!')
