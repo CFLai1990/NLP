@@ -19,9 +19,9 @@ def infer_color(doc, entity_dict):
         print('1')
         if token.pos_ == 'ADJ':
             indices, signs = infer_adj_color(token)
-        print(str(len(indices)))
-        print(str(len(signs)))
+        print(type(doc))
         for e_id in indices:
+            print(e_id)
             entity_id = 'entity_' + str(e_id)
             print(entity_id)
             color_sign = signs[e_id]
