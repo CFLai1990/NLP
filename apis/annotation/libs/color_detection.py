@@ -99,6 +99,7 @@ def infer_adj_color_subjects(token, be_verb=False):
                 entities, signs = infer_entities(child, True)
                 entity_indices.extend(entities)
                 entity_signs.extend(signs)
+                print(entities, signs)
             # handle negation
             if child.dep_ == "neg":
                 for index, e_sign in enumerate(entity_signs):
