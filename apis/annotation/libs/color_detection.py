@@ -56,7 +56,7 @@ def infer_adj_color(token):
     print('  dep: ' + token.dep_)
     print('  head: ' + token.head.lemma_)
     print('  head_type: ' + token.head.dep_)
-    print('  ancestor: ' + token.head.head)
+    print('  ancestor: ' + token.head.head.text)
     print('________________________')
     if token.dep_ == 'pobj' and token.head.dep_ == 'prep':
         v_token = token.head.head
