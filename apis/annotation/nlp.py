@@ -26,8 +26,10 @@ class ApiClass(API):
         sentences = self.get_sentences(doc)
         entities = {}
         for index, sent in enumerate(sentences):
+            print('St_' + str(index) + 'started')
             sent_entities = self.pipeline.infer(sent['content'])
             entities['st_' + str(index)] = sent_entities
+            print('St_' + str(index) + 'finished')
         return {
             'sentences': sentences,
             'entities': entities
