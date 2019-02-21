@@ -120,9 +120,6 @@ def infer_adj_color_objects(token, verb=False):
     # case 5
     if token.head and token.dep_ == "acl":
         entities, signs = infer_entities(token.head, False)
-        print('__________')
-        print(str(len(entities)))
-        print(str(len(signs)))
         entity_indices.extend(entities)
         entity_signs.extend(signs)
     if token.children:
