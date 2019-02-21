@@ -21,13 +21,14 @@ def infer_color(doc, entity_dict):
             indices, signs = infer_adj_color(token)
         print(type(doc))
         for e_id in indices:
-            print(e_id)
+            print('token ID: ' + e_id)
             entity_id = 'entity_' + str(e_id)
-            print(entity_id)
             color_sign = signs[e_id]
+            print('2')
             if entity_dict[entity_id] is None:
+                print('3')
                 e_token = doc[e_id]
-                print('2')
+                print('4')
                 entity_dict[entity_id] = {
                     'name': e_token.lemma_,
                     'color': {
