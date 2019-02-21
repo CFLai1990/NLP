@@ -15,9 +15,11 @@ def infer_subjects(token):
     signs = []
     overall_sign = True
     if token.children:
+        print('has children')
         for child in token.children:
             # Case 1: A, B, C, ... [conj] N
             # Example: A, B, and C are ...
+            print(child.lemma_)
             if child.dep_ == "conj":
                 entities.append(token.i)
                 signs.append(True)
@@ -37,6 +39,7 @@ def infer_subjects(token):
                 child_text = child.lemma_
                 overall_sign = get_relation(child_text)
     else:
+        print('no children')
         entities.append(token.i)
         signs.append(True)
     # Handle case 3: neither ...
