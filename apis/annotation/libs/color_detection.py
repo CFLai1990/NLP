@@ -15,7 +15,6 @@ def infer_color(doc, entity_dict):
         color_indices.append(t_id)
         indices = []
         signs = []
-        print('color: ' + std_color + ', POS: ' + token.pos_)
         if token.pos_ == 'ADJ':
             indices, signs = infer_adj_color(token)
         for stored_id, e_id in enumerate(indices):
