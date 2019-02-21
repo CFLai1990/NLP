@@ -65,7 +65,6 @@ def infer_adj_color(token):
                 for child in v_token.children:
                     if child.dep_ == "auxpass":
                         has_be = True
-                        print('HERE!!!!!!!!!!!')
                 if has_be:
                     # Case 4: [entities] [be] [verb] [prep] [color]
                     return infer_adj_color_subjects(v_token)
@@ -121,6 +120,9 @@ def infer_adj_color_objects(token, verb=False):
     # case 5
     if token.head and token.dep_ == "acl":
         entities, signs = infer_entities(token.head, False)
+        print('__________')
+        print(str(len(entities)))
+        print(str(len(signs)))
         entity_indices.extend(entities)
         entity_signs.extend(signs)
     if token.children:
