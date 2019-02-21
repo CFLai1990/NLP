@@ -47,6 +47,8 @@ def infer_adj_color(token):
         if cont_sign:
             return infer_adj_color(token.head)
         return indices, signs
+    print('  dep: ' + token.dep_)
+    print('  head: ' + token.head.lemma_)
     # Case 2: [entities] [be] [color]
     if token.dep_ == 'acomp' and token.head.lemma_ == 'be':
         v_token = token.head
