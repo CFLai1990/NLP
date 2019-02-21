@@ -12,30 +12,23 @@ def infer_color(doc, entity_dict):
         if std_color is None:
             continue
         # Identify the entities it describes
-        print('color: ' + std_color)
         color_indices.append(t_id)
         indices = []
         signs = []
-        print('1')
+        print('color: ' + std_color + ', POS: ' + token.pos_)
         if token.pos_ == 'ADJ':
             indices, signs = infer_adj_color(token)
-        print(type(doc))
         for stored_id, e_id in enumerate(indices):
-            print('token ID: ' + str(e_id))
             entity_id = 'entity_' + str(e_id)
             color_sign = signs[stored_id]
-            print('2')
             if entity_dict.get(entity_id) is None:
-                print('3')
                 e_token = doc[e_id]
-                print('4')
                 entity_dict[entity_id] = {
                     'name': e_token.lemma_,
                     'color': {
                         std_color: color_sign
                     }
                 }
-                print('3')
             else:
                 if entity_dict[entity_id]['color'] is None:
                     entity_dict[entity_id]['color'] = {
@@ -45,7 +38,6 @@ def infer_color(doc, entity_dict):
                     entity_dict[entity_id]['color'].update({
                         std_color: color_sign
                     })
-        print('3')
 
 def infer_adj_color(token):
     """Infer the entities when the color is an ADJ"""

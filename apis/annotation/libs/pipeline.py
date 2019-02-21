@@ -8,10 +8,7 @@ class NLPPipeline:
 
     def infer(self, sentence):
         """The main entry for NLP"""
-        print('pipeline started')
         doc = self.nlp(sentence)
         entities = {}
-        print('middle')
         infer_color(doc, entities)
-        print('pipeline finished')
         return entities
