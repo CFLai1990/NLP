@@ -54,9 +54,8 @@ def infer_adj_color(token):
     # Case 3~6: ... [prep] [color]
     print('________________________')
     print('  dep: ' + token.dep_)
-    print('  head: ' + token.head.lemma_)
+    print('  head_text: ' + token.head.lemma_)
     print('  head_type: ' + token.head.dep_)
-    print('  ancestor: ' + token.head.head.text)
     print('________________________')
     if token.dep_ == 'pobj' and token.head.dep_ == 'prep':
         v_token = token.head.head
@@ -93,6 +92,9 @@ def infer_adj_color_subjects(token, be_verb=False):
     entity_signs = []
     if token.children:
         for child in token.children:
+            print('___ text: ' + token.text)
+            print('___ child: ' + child.text)
+            print('___ child: ' + child.dep_)
             if (be_verb and child.dep_ == 'nsubj') or (not be_verb and child.dep_ == 'nsubjpass'):
                 entities, signs = infer_entities(child, True)
                 entity_indices.extend(entities)
