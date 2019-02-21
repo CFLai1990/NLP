@@ -61,13 +61,7 @@ def infer_adj_color(token):
             if v_token.lemma_ == 'be':
                 return infer_adj_color_subjects(v_token, True)
             # Case 4: [entities] [be] [verb] [prep] [color]
-            print('________________________')
-            print('  dep: ' + token.dep_)
-            print('  v_token_dep: ' + v_token.dep_)
-            print('  v_token_text: ' + v_token.head.lemma_)
-            print('  v_token_type: ' + v_token.head.dep_)
-            print('________________________')
-            if v_token.head and v_token.head.lemma_ == 'be':
+            if v_token.lemma_ != 'be':
                 return infer_adj_color_subjects(v_token)
             # Case 5: [entities] [verb] [prep] [color]
             return infer_adj_color_objects(v_token, True)
