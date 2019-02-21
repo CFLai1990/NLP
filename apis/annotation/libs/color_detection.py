@@ -60,11 +60,16 @@ def infer_adj_color(token):
             # Case 3: [entities] [be] [prep] [color]
             if v_token.lemma_ == 'be':
                 return infer_adj_color_subjects(v_token, True)
-            # Case 4: [entities] [be] [verb] [prep] [color]
             if v_token.lemma_ != 'be':
-                return infer_adj_color_subjects(v_token)
-            # Case 5: [entities] [verb] [prep] [color]
-            return infer_adj_color_objects(v_token, True)
+                has_be = False
+                for child in token.children:
+                    if child.dep_ == "auxpass":
+                        has_be = True
+                if has_be:
+                    # Case 4: [entities] [be] [verb] [prep] [color]
+                    return infer_adj_color_subjects(v_token)
+                # Case 5: [entities] [verb] [prep] [color]
+                return infer_adj_color_objects(v_token, True)
         # Case 6: [entities] [prep] [color]
         if v_token.pos_ == 'NOUN' or v_token.pos_ == 'PROPN':
             return infer_adj_color_objects(token.head)
@@ -87,14 +92,10 @@ def infer_adj_color_subjects(token, be_verb=False):
     entity_signs = []
     if token.children:
         for child in token.children:
-            print('___ text: ' + token.text)
-            print('___ child: ' + child.text)
-            print('___ child: ' + child.dep_)
             if (be_verb and child.dep_ == 'nsubj') or (not be_verb and child.dep_ == 'nsubjpass'):
                 entities, signs = infer_entities(child, True)
                 entity_indices.extend(entities)
                 entity_signs.extend(signs)
-                print(entities, signs)
             # handle negation
             if child.dep_ == "neg":
                 for index, e_sign in enumerate(entity_signs):
