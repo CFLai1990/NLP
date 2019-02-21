@@ -21,7 +21,7 @@ def infer_color(doc, entity_dict):
             indices, signs = infer_adj_color(token)
         print(type(doc))
         for e_id in indices:
-            print('token ID: ' + e_id)
+            print('token ID: ' + str(e_id))
             entity_id = 'entity_' + str(e_id)
             color_sign = signs[e_id]
             print('2')
