@@ -7,17 +7,16 @@ class ApiClass(API):
     def __init__(self, parameters):
         API.__init__(self, parameters)
 
-    def get_od_data(self, data):
+    def save_od_data(self, data):
         """The main function for parsing the OD data"""
         od_path = self.file_op.get_path(OD_PATH)
-        print(data)
         with open(od_path, 'w') as file:
             json.dump(data, file)
             file.close()
         return True
 
     def execute(self, data):
-        success = self.get_od_data(data)
+        success = self.save_od_data(data)
         info = 'SUCCESS: the OD data has been saved successfully.'
         if not success:
             info = 'FAILURE: the OD data has not been saved.'
