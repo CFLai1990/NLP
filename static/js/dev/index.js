@@ -5,15 +5,28 @@ import MSocket from './msgsocket.js'
 */
 const MESSAGE = 'NLP'
 const MACHINE = 'dl'
+const VERSION = 'dev2'
 // const VERSION = 'dev'
-const VERSION = 'public'
+// const VERSION = 'public'
 let $ = window.$
 
 $(document).ready(function () {
     // Socket.io demo
+  let port
+  switch (VERSION) {
+    case 'dev2':
+      port = 2017
+      break
+    case 'dev':
+      port = 2018
+      break
+    case 'public':
+      port = 2019
+      break
+  }
   let socket = new ClientIO({
     'address': MACHINE,
-    'port': VERSION === 'dev' ? 2018 : 2019,
+    'port': port,
     'namespace': 'api/annotation'
   })
   let fsocket = new MSocket(socket, MESSAGE)
