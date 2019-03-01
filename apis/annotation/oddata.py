@@ -1,4 +1,5 @@
 """oddata: parse the data returned from the Object Detection module"""
+import json
 from .__settings__ import API, OD_PATH
 
 class ApiClass(API):
@@ -9,8 +10,9 @@ class ApiClass(API):
     def get_od_data(self, data):
         """The main function for parsing the OD data"""
         od_path = self.file_op.get_path(OD_PATH)
+        print(data)
         with open(od_path, 'wb') as file:
-            file.write(str(data))
+            json.dump(data, file)
             file.close()
         return True
 
