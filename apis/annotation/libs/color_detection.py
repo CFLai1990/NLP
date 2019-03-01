@@ -29,7 +29,7 @@ def infer_color(doc, entity_dict):
                     }
                 }
             else:
-                if entity_dict[entity_id]['color'] is None:
+                if 'color' not in entity_dict[entity_id]:
                     entity_dict[entity_id]['color'] = {
                         std_color: color_sign
                     }

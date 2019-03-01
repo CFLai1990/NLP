@@ -29,7 +29,7 @@ def infer_size(doc, entity_dict):
 					}
 				}
 			else:
-				if not entity_dict[entity_id]['size']:
+				if 'size' not in entity_dict[entity_id]:
 					entity_dict[entity_id]['size'] = {
 						std_size: size_sign
 					}
