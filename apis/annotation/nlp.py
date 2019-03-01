@@ -1,4 +1,4 @@
-"""test: testing api for NLP"""
+"""nlp: the main api for NLP"""
 # from .libs import nlp
 from .__settings__ import API
 from .libs import pipeline

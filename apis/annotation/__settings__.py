@@ -6,8 +6,10 @@ from ..libs import API, APIs
 NAMESPACE = '/api/annotation'
 PACKAGE = 'apis.annotation'
 OUTPUT_DIR = os.path.abspath('./files/annotation')
+OD_PATH = 'oddata.txt'
 
 # message - apiName
 EVENT_DICT = {
-    'NLP': 'nlp'
+    'NLP': 'nlp',
+    'OD_Data': 'oddata'
 }

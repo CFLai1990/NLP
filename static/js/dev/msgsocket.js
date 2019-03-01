@@ -1,3 +1,4 @@
+import FakeOD from './fakeod.js'
 import MLoad from './msguploader.js'
 import Modal from './loading.js'
 
@@ -8,6 +9,7 @@ class MSocket {
     this.data = null
     this.mload = new MLoad()
     this.mdl = new Modal()
+    this.fod = new FakeOD(socket)
   }
   getData (data) {
     this.data = data
@@ -34,6 +36,7 @@ class MSocket {
   onConnect () {
     this.handleUpload()
     this.handleReceive()
+    this.fod.emit()
   }
 }
 
