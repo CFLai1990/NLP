@@ -10,7 +10,7 @@ class ApiClass(API):
         """The main function for parsing the OD data"""
         od_path = self.file_op.get_path(OD_PATH)
         with open(od_path, 'wb') as file:
-            file.write(data)
+            file.write(str(data))
             file.close()
         return True
 
