@@ -46,13 +46,17 @@ class APIs:
         """Initialize after the connection is stable and ready"""
         @self.socket.on(get_client_msg('__ready__', client_id), namespace=self.namespace)
         def _callback(data):
+            print('1')
             self.init_output(client_id)
+            print('2')
             self.bind_events(client_id)
+            print('3')
             # save the information of the client socket
             self.clients[client_id] = {
                 'IP': request.remote_addr,
                 'info': data
             }
+            print('4')
             self.logger.info('Client connected: ID_' + client_id)
 
     def init_output(self, client_id):
