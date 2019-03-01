@@ -5,8 +5,8 @@ import MSocket from './msgsocket.js'
 */
 const MESSAGE = 'NLP'
 const MACHINE = 'dl'
-const VERSION = 'dev2'
-// const VERSION = 'dev'
+// const VERSION = 'dev2'
+const VERSION = 'dev'
 // const VERSION = 'public'
 let $ = window.$
 
