@@ -32,7 +32,7 @@ def infer_loc(doc, entity_dict):
                     }
                 }
             else:
-                if not entity_dict[entity_id]['location']:
+                if 'location' not in entity_dict[entity_id]:
                     entity_dict[entity_id]['location'] = {
                         std_loc: loc_sign
                     }
