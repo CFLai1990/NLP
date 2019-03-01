@@ -1,10 +1,7 @@
 """The pipeline for Natural Language Processing"""
 from .color_detection import infer_color
 from .size_detection import infer_size
-<<<<<<< HEAD
-=======
 from .location_detection import infer_loc
->>>>>>> dev
 
 class NLPPipeline:
     """The pipeline class"""
@@ -17,8 +14,5 @@ class NLPPipeline:
         entities = {}
         infer_color(doc, entities)
         infer_size(doc, entities)
-<<<<<<< HEAD
-=======
         infer_loc(doc, entities)
->>>>>>> dev
         return entities
