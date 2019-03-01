@@ -1,6 +1,6 @@
 const MESSAGE = 'OD_Data'
 const FAKEDATA = {
-  'labels': ['Samsung', '21%', 'Apple', '14%', 'Huawei', '10%', 'Others', '55%']
+  'labels': []// ['Samsung', '21%', 'Apple', '14%', 'Huawei', '10%', 'Others', '55%']
 }
 
 class FakeOD {
