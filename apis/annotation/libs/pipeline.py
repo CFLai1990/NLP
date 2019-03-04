@@ -15,7 +15,6 @@ class NLPPipeline:
         # Get the entities described by their labels
         labels = {}
         if od_data is not None:
-            print(od_data["labels"])
             infer_label(sentence, labels, od_data["labels"])
         # Get the entities described by their visual features
         entities = {}
