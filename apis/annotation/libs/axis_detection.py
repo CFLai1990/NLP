@@ -37,13 +37,17 @@ def infer_axis(doc, entity_dict, axis_list):
             ticks_info = axis_info["ticks"]["data"]
             tick_results = []
             unit_data = None
+            print('c_1')
             if axis_info["unit"]["mentioned"]:
                 unit_data = axis_data["unit"]["lemma"]
+            print('c_2')
             for tick_info in ticks_info:
                 tick_data = axis_data["ticks"][tick_info["id"]]
                 tick_tokens = []
+                print('c_3')
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
+                print('c_4')
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
                 tick_results.append(tick_result)
             print('d')
