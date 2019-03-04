@@ -308,9 +308,9 @@ def match_units(tick_token, unit_lemmas):
         unit_match_count = 0
         temp_num = tick_token
         temp_unit = tick_token
-        print("tick_token.head.lemma: ", tick_token.head.lemma)
+        print("tick_token.head.lemma: ", tick_token.head.lemma_)
         print(unit_lemmas[0])
-        if tick_token.head.lemma == unit_lemmas[0]:
+        if tick_token.head.lemma_ == unit_lemmas[0]:
             head_token = tick_token
             num_stop = False
             for unit_lemma in unit_lemmas:
