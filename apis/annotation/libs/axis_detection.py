@@ -83,6 +83,7 @@ def infer_axis(doc, entity_dict, axis_list):
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
                 tick_text = tick_result["text"]
+                print("conjunction", tick_conjs)
                 for tick_id, tick_conj_id in enumerate(tick_conjs):
                     tick_location = tick_result["locations"][tick_id]
                     if tick_conj_id is not None:
