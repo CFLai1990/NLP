@@ -85,6 +85,8 @@ def infer_axis(doc, entity_dict, axis_list):
                                         })
                                 break
             # pack the results
+            print('0')
+            print(tick_entities)
             for tick_entity in tick_entities:
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
 
