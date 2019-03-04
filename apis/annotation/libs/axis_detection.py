@@ -351,6 +351,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         conj_id = None
         num_token, unit_token = match_units(tick_token, unit_lemmas)
         tick_locations.append(unit_token.i)
+        print("num_token: ", num_token.lemma_)
+        print("unit_token: ", unit_token.lemma_)
         print('t_1')
         # Handle conjunction
         if unit_token.dep_ == "conj":
