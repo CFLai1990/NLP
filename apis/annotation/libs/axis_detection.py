@@ -7,6 +7,7 @@ def infer_axis(doc, entity_dict, axis_list):
     if axis_list is None:
         return
     mentioned, axes_info = search_for_axes(doc, axis_list)
+    print(mentioned)
     if not mentioned:
         return
     for axis_info in axes_info:
