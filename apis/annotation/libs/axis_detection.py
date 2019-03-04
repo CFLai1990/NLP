@@ -27,7 +27,7 @@ def infer_axis(doc, entity_dict, axis_list):
             axis_unit = None
             if axis_info["unit"]["existed"]:
                 axis_unit = axis_data["unit"]["text"]
-            if axis_info["axis"]["existed"]:
+            if axis_info["title"]["existed"]:
                 axis_title = axis_data["title"]["text"]
             title_root_id = axis_data["title"]["root"]
             title_locations = []
