@@ -185,6 +185,8 @@ def search_for_axes(doc, axis_list):
         # whether the axis tick + unit has been mentioned
         unit_mentioned = True
         if axis.get("unit") is not None:
+            print('------------ unit ----------------------')
+            print(axis.get("unit"))
             unit_mentioned, unit_pos = search_for_label(doc, axis["unit"]["lemma"])
         # whether the tick values have been mentioned
         ticks = None
