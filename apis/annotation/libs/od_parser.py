@@ -24,9 +24,11 @@ class ODParser:
                         title = {}
                         title["text"] = label[0:left_brc]
                         title["lemma"] = []
+                        title["root"] = None
                     unit = {}
                     unit["text"] = label[(left_brc+1):right_brc]
                     unit["lemma"] = []
+                    unit["root"] = None
                 else:
                     # The unit does not exist
                     # or Case 2: "[title] \n ([units])"
@@ -34,18 +36,23 @@ class ODParser:
                         title = {}
                         title["text"] = label
                         title["lemma"] = []
+                        title["root"] = None
             # Assume the "labels" list contains only one title and one unit
             if unit is not None:
                 # Get the unit
                 unit_doc = self.model(unit["text"])
-                for unit_token in unit_doc:
+                for unit_id, unit_token in enumerate(unit_doc):
                     if unit_token.pos_ == "NOUN" or unit_token.pos_ == "SYM":
                         unit["lemma"].append(unit_token.lemma_)
+                    if unit_token.dep_ == "ROOT":
+                        unit["root"] = unit_id
             if title is not None:
                 # Get the title
                 title_doc = self.model(title["text"])
-                for title_token in title_doc:
+                for title_id, title_token in enumerate(title_doc):
                     title["lemma"].append(title_token.lemma_)
+                    if title_token.dep_ == "ROOT":
+                        title["root"] = title_id
         return title, unit
 
     def parse_axis_ticks(self, tick_list):
@@ -54,8 +61,16 @@ class ODParser:
         if tick_list is not None:
             ticks = []
             for tick_text in tick_list:
-                tick = {}
-                tick["text"] = tick_text
+                tick = {
+                    "text": tick_text,
+                    "lemma": [],
+                    "root": None
+                }
+                tick_doc = self.model(tick_text)
+                for tick_id, tick_token in enumerate(tick_doc):
+                    tick["lemma"].append(tick_token.lemma_)
+                    if tick_token.dep_ == "ROOT":
+                        tick["root"] = tick_id
                 ticks.append(tick)
         return ticks
 

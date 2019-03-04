@@ -13,9 +13,6 @@ def get_std_loc(loc_text):
 LOCATION_STANDARD = [
     # middle
     'middle',
-    # axis_location
-    'high',
-    'low',
     # y_location
     'top',
     'bottom',
@@ -27,10 +24,6 @@ LOCATION_STANDARD = [
 LOCATION_FULL = {
     # middle
     'middle': 0,
-    # axis_location - high
-    'high': 1,
-    # axis_location - low
-    'low': 2,
     # y_location - top
     'top': 3,
     # y_location - top
