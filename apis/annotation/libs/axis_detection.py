@@ -7,7 +7,6 @@ def infer_axis(doc, entity_dict, axis_list):
     if axis_list is None:
         return
     mentioned, axes_info = search_for_axes(doc, axis_list)
-    print(mentioned)
     if not mentioned:
         return
     for axis_info in axes_info:
@@ -181,6 +180,10 @@ def search_for_axes(doc, axis_list):
                         "mentioned": tick_mentioned,
                         "locations": tick_pos,
                     })
+        print(axis["title"]["text"])
+        print("title_mentioned", title_mentioned)
+        print("unit_mentioned", unit_mentioned)
+        print("tick_mentioned", ticks_mentioned)
         axis_mentioned = ticks_mentioned and unit_mentioned
         axes_info.append({
             "mentioned": axis_mentioned,
