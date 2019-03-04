@@ -383,7 +383,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
                     else:
                         neg_sign = get_negation(prep_token)
-            print(std_prep.lemma_)
+            print(std_prep)
             print(v_token.lemma_)
             if std_prep is None or v_token is None:
                 continue
