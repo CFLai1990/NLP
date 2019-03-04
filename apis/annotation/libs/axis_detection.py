@@ -11,10 +11,8 @@ def infer_axis(doc, entity_dict, axis_list):
         return
     for axis_info in axes_info:
         # the axis has not been mentioned
-        print('a')
         if not axis_info["mentioned"]:
             continue
-        print('b')
         # the axis has been mentioned
         axis_id = axis_info["id"]
         axis_data = axis_list[axis_id]
@@ -24,8 +22,6 @@ def infer_axis(doc, entity_dict, axis_list):
             axis_unit = axis_data["unit"]["text"]
         if axis_info["title"]["existed"]:
             axis_title = axis_data["title"]["text"]
-        print('----------------- axis_data --------------------')
-        print(axis_data)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -39,34 +35,25 @@ def infer_axis(doc, entity_dict, axis_list):
                 "unit": axis_unit,
                 "ticks": []
                 })
-        print('c')
         # infer the entities via the axis ticks
         if axis_info["ticks"]["existed"] and axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
             tick_results = []
             unit_data = None
-            print('c_1')
             if axis_info["unit"]["existed"] and axis_info["unit"]["mentioned"]:
                 unit_data = axis_data["unit"]["lemma"]
-            print('c_2')
             for tick_info in ticks_info:
                 tick_data = axis_data["ticks"][tick_info["id"]]
                 tick_tokens = []
-                print('c_3')
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
-                print('c_4')
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
                 tick_results.append(tick_result)
-            print('d')
             # pack the results in tick_entities
             tick_entities = []
-            print('d_1')
-            print(axis_title, axis_unit)
             for tick_result in tick_results:
                 entities_by_location = tick_result["entities"]
                 if entities_by_location:
-                    print('d_2')
                     for _id, entities_loc in enumerate(entities_by_location):
                         if entities_loc:
                             tick_entities.append({
@@ -78,13 +65,10 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
-            print('d_3')
-            print(tick_results)
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
                 tick_text = tick_result["text"]
-                print("conjunction", tick_conjs)
                 for tick_id, tick_conj_id in enumerate(tick_conjs):
                     tick_location = tick_result["locations"][tick_id]
                     if tick_conj_id is not None:
@@ -107,8 +91,6 @@ def infer_axis(doc, entity_dict, axis_list):
                                         })
                                 break
             # pack the results
-            print('0')
-            print(tick_entities)
             for tick_entity in tick_entities:
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
 
@@ -134,10 +116,8 @@ def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
 
 def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
     """Pack the entity dict by the ticks"""
-    print('1')
     entities = tick_entity["entities"]
     signs = tick_entity["signs"]
-    print('2')
     for _id, e_token_index in enumerate(entities):
         entity_id = 'entity_' + str(e_token_index)
         e_axis_state = {
@@ -150,7 +130,6 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             "relation": tick_entity["relation"],
             "sign": signs[_id]
         }
-        print('3')
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
             e_state = e_axis_state.update({
@@ -162,13 +141,11 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             }
         else:
             if 'axis' not in entity_dict[entity_id]:
-                print('4')
                 e_state = e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
                 entity_dict[entity_id]['axis'] = [e_state]
             else:
-                print('5')
                 # search for the corresponding axis
                 axis_found = False
                 for axis_state in entity_dict[entity_id]["axis"]:
@@ -200,7 +177,6 @@ def search_for_axes(doc, axis_list):
         unit_mentioned = False
         unit_pos = None
         unit_existed = False
-        print(axis.get("unit") is not None)
         if axis.get("unit") is not None:
             unit_existed = True
             unit_mentioned, unit_pos = search_for_label(doc, axis["unit"]["lemma"])
@@ -299,6 +275,7 @@ def infer_titles(doc, title_locations):
         entity_indices.extend(location_entities)
         entity_signs.extend(location_signs)
         location_to_entities[title_location] = location_entities
+    print(location_entities)
     return entity_indices, entity_signs, location_to_entities
 
 def match_units(tick_token, unit_lemmas):
@@ -310,8 +287,6 @@ def match_units(tick_token, unit_lemmas):
         unit_match_count = 0
         temp_num = tick_token
         temp_unit = tick_token
-        print("tick_token.head.lemma: ", tick_token.head.lemma_)
-        print(unit_lemmas[0])
         if tick_token.head.lemma_ == unit_lemmas[0]:
             head_token = tick_token
             num_stop = False
@@ -355,9 +330,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         conj_id = None
         num_token, unit_token = match_units(tick_token, unit_lemmas)
         tick_locations.append(unit_token.i)
-        print("num_token: ", num_token.lemma_)
-        print("unit_token: ", unit_token.lemma_)
-        print('t_1')
         # Handle conjunction
         if unit_token.dep_ == "conj":
             head_token = unit_token.head
@@ -365,7 +337,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 head_token = head_token.head
             conj_id = head_token.i
         else:
-            print('t_2')
             # Find the standard prep and the verb token
             if unit_token.head.pos_ == "VERB":
                 temp_v = unit_token.head
@@ -415,7 +386,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                         neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
-            print('t_3')
             # Detect the entities
             if v_token.pos_ == "VERB":
                 for child in v_token.children:
@@ -441,7 +411,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 for sign_id, tick_sign in enumerate(tick_signs):
                     tick_signs[sign_id] = not tick_sign
             # Update
-        print('t_4')
         entity_indices.append(tick_entities)
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
