@@ -184,11 +184,12 @@ def search_for_axes(doc, axis_list):
         if axis.get("title") is not None:
             title_mentioned, title_pos = search_for_label(doc, axis["title"]["lemma"])
         # whether the axis tick + unit has been mentioned
-        unit_mentioned = True
+        unit_mentioned = False
         unit_pos = None
+        unit_existed = False
+        print(axis.get("unit") is not None)
         if axis.get("unit") is not None:
-            print('------------ unit ----------------------')
-            print(axis.get("unit"))
+            unit_existed = True
             unit_mentioned, unit_pos = search_for_label(doc, axis["unit"]["lemma"])
         # whether the tick values have been mentioned
         ticks = None
@@ -206,7 +207,7 @@ def search_for_axes(doc, axis_list):
                         "mentioned": tick_mentioned,
                         "locations": tick_pos,
                     })
-        axis_mentioned = ticks_mentioned and unit_mentioned
+        axis_mentioned = ticks_mentioned and (unit_mentioned or not unit_existed)
         axes_info.append({
             "mentioned": axis_mentioned,
             "id": axis_id,
