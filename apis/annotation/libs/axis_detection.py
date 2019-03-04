@@ -55,9 +55,11 @@ def infer_axis(doc, entity_dict, axis_list):
             print('d')
             # pack the results in tick_entities
             tick_entities = []
+            print('d_1')
             for tick_result in tick_results:
                 entities_by_location = tick_result["entities"]
                 if entities_by_location:
+                    print('d_2')
                     for _id, entities_loc in enumerate(entities_by_location):
                         if entities_loc:
                             tick_entities.append({
@@ -69,6 +71,7 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
+            print('d_3')
             print(tick_results)
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
