@@ -39,6 +39,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities)
+                print(tick_result)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
@@ -180,10 +181,6 @@ def search_for_axes(doc, axis_list):
                         "mentioned": tick_mentioned,
                         "locations": tick_pos,
                     })
-        print(axis["title"]["text"])
-        print("title_mentioned", title_mentioned)
-        print("unit_mentioned", unit_mentioned)
-        print("tick_mentioned", ticks_mentioned)
         axis_mentioned = ticks_mentioned and unit_mentioned
         axes_info.append({
             "mentioned": axis_mentioned,

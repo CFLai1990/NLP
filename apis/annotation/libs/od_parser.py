@@ -22,7 +22,11 @@ class ODParser:
                     # Case 1: "[title] ([unit])"
                     if title is None and left_brc > 0:
                         title = {}
-                        title["text"] = label[0:left_brc]
+                        title_text = label[0:left_brc]
+                        if title_text[len(title_text)-1] == ' ':
+                            title["text"] = label[0:left_brc-1]
+                        else:
+                            title["text"] = title_text
                         title["lemma"] = []
                         title["root"] = None
                     unit = {}
