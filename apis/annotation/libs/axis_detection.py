@@ -33,12 +33,15 @@ def infer_axis(doc, entity_dict, axis_list):
         if axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
             tick_results = []
+            unit_data = None
+            if axis_info["unit"]["mentioned"]:
+                unit_data = axis_data["unit"]["lemma"]
             for tick_info in ticks_info:
                 tick_data = axis_data["ticks"][tick_info["id"]]
                 tick_tokens = []
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
-                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities)
+                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
                 print(tick_result)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
@@ -257,7 +260,7 @@ def infer_titles(doc, title_locations):
         location_to_entities[title_location] = location_entities
     return entity_indices, entity_signs, location_to_entities
 
-def infer_ticks(tick_tokens, tick_text, title_to_entities):
+def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
     """Infer the described entities via the axis ticks"""
     tick_locations = []
     entity_indices = []
@@ -265,13 +268,28 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities):
     entity_preps = []
     entity_conjs = []
     for tick_token in tick_tokens:
-        tick_locations.append(tick_token.i)
         tick_entities = []
         tick_signs = []
         std_prep = None
         v_token = None
         neg_sign = True
         conj_id = None
+        num_token = tick_token
+        unit_token = tick_token
+        # Shift if the value is mentioned with the count and the unit
+        
+        if unit_lemma is not None and tick_token.head.lemma == unit_lemmas[0]:
+            unit_match_count = 0
+            head_token = tick_token
+            for unit_lemma in unit_lemmas:
+                if head_token.head.lemma_ == unit_lemma:
+                    unit_match_count = unit_match_count + 1
+                    head_token = head_token.head
+                else:
+                    break
+            if unit_match_count == len(unit_lemmas):
+                tick_token = head_token
+        tick_locations.append(tick_token.i)
         # Handle conjunction
         if tick_token.dep_ == "conj":
             head_token = tick_token.head
@@ -282,25 +300,32 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities):
             # Find the standard prep and the verb token
             if tick_token.dep_ == "attr":
                 than_found = False
-                std_found = False
+                amod_found = False
+                prep_lemma = None
                 for child in tick_token.children:
                     if child.dep_ == "quantmod" and child.lemma_ == "than":
                         than_found = True
-                    if child.dep_ == "amod":
-                        std_prep = get_std_axis(child.lemma_)
-                        if std_prep is not None:
-                            std_found = True
-                if std_found and than_found:
+                    if child.dep_ == "amod" and child.tag_ == "JJR":
+                        amod_found = True
+                        prep_lemma = child.lemma_
+                # Case 1: [entities] [be] [prep] [than] [ticks] ...
+                # Example: the sales of Huawei is higher than 250 million
+                if than_found and amod_found:
+                    std_prep = get_std_axis(prep_lemma)
+                    if std_prep is not None:
+                        std_found = True
+                else:
+                    # Case 2: [entities] [be] [ticks]
+                    # Example: the sales of Huawei is 250 million
+                    std_prep = get_std_axis('at')
+                    std_found = True
+                if std_found:
                     v_token = tick_token.head
             if tick_token.dep_ == "pobj":
                 prep_token = tick_token.head
                 if prep_token.lemma_ == "than":
                     prep_token = prep_token.head
                 std_prep = get_std_axis(prep_token.lemma_)
-                print('------------')
-                print(prep_token.lemma_)
-                print(std_prep)
-                print('------------')
                 if std_prep is not None:
                     v_token = prep_token.head
                     # handle negation
@@ -316,6 +341,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities):
             if std_prep is None or v_token is None:
                 continue
             # Detect the entities
+            if v_token.pos_ == "attr":
+                v_token = v_token.head
             if v_token.pos_ == "VERB":
                 for child in v_token.children:
                     # handle negation
