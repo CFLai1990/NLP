@@ -301,8 +301,6 @@ def infer_titles(doc, title_locations):
 
 def match_units(tick_token, unit_lemmas):
     """The function for matching units"""
-    print("tick_token: ", tick_token.lemma_)
-    print(unit_lemmas)
     num_token = tick_token
     unit_token = tick_token
     # Shift if the value is mentioned with the count and the unit
@@ -310,6 +308,8 @@ def match_units(tick_token, unit_lemmas):
         unit_match_count = 0
         temp_num = tick_token
         temp_unit = tick_token
+        print("tick_token.head.lemma: ", tick_token.head.lemma)
+        print(unit_lemmas[0])
         if tick_token.head.lemma == unit_lemmas[0]:
             head_token = tick_token
             num_stop = False
