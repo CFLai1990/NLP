@@ -42,9 +42,10 @@ def infer_axis(doc, entity_dict, axis_list):
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
-                print(tick_result)
+                print('1')
                 tick_results.append(tick_result)
             # pack the results in tick_entities
+            print('2')
             tick_entities = []
             for tick_result in tick_results:
                 entities_by_location = tick_result["entities"]
@@ -60,6 +61,7 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
+            print('3')
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
@@ -85,6 +87,7 @@ def infer_axis(doc, entity_dict, axis_list):
                                         "locations": [tick_location]
                                         })
                                 break
+            print('4')
             # pack the results
             for tick_entity in tick_entities:
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
