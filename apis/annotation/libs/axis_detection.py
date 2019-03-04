@@ -11,8 +11,6 @@ def infer_axis(doc, entity_dict, axis_list):
         return
     for axis_info in axes_info:
         # the axis has not been mentioned
-        print('----------------- axis_data --------------------')
-        print(axis_data)
         print('a')
         if not axis_info["mentioned"]:
             continue
@@ -20,6 +18,8 @@ def infer_axis(doc, entity_dict, axis_list):
         # the axis has been mentioned
         axis_id = axis_info["id"]
         axis_data = axis_list[axis_id]
+        print('----------------- axis_data --------------------')
+        print(axis_data)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["mentioned"]:
