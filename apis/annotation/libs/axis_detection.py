@@ -63,7 +63,7 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
-            print('e')
+            print(tick_results)
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
