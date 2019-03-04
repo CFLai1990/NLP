@@ -308,6 +308,7 @@ def match_units(tick_token, unit_lemmas):
 
 def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
     """Infer the described entities via the axis ticks"""
+    print('tick started')
     tick_locations = []
     entity_indices = []
     entity_signs = []
@@ -322,6 +323,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         conj_id = None
         num_token, unit_token = match_units(tick_token, unit_lemmas)
         tick_locations.append(unit_token.i)
+        print('t_1')
         # Handle conjunction
         if unit_token.dep_ == "conj":
             head_token = unit_token.head
@@ -329,6 +331,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 head_token = head_token.head
             conj_id = head_token.i
         else:
+            print('t_2')
             # Find the standard prep and the verb token
             if unit_token.head.pos_ == "VERB":
                 temp_v = unit_token.head
@@ -378,6 +381,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                         neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
+            print('t_3')
             # Detect the entities
             if v_token.pos_ == "VERB":
                 for child in v_token.children:
@@ -403,10 +407,12 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 for sign_id, tick_sign in enumerate(tick_signs):
                     tick_signs[sign_id] = not tick_sign
             # Update
+        print('t_4')
         entity_indices.append(tick_entities)
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
         entity_conjs.append(conj_id)
+    print('tick ended')
     return {
         "text": tick_text,
         "locations": tick_locations,
