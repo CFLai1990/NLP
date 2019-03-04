@@ -180,10 +180,12 @@ def search_for_axes(doc, axis_list):
     for axis_id, axis in enumerate(axis_list):
         # whether the axis title has been mentioned
         title_mentioned = False
+        title_pos = None
         if axis.get("title") is not None:
             title_mentioned, title_pos = search_for_label(doc, axis["title"]["lemma"])
         # whether the axis tick + unit has been mentioned
         unit_mentioned = True
+        unit_pos = None
         if axis.get("unit") is not None:
             print('------------ unit ----------------------')
             print(axis.get("unit"))
@@ -194,6 +196,7 @@ def search_for_axes(doc, axis_list):
         if axis.get("ticks") is not None:
             ticks = []
             tick_mentioned = False
+            tick_pos = None
             for tick_id, tick in enumerate(axis["ticks"]):
                 tick_mentioned, tick_pos = search_for_label(doc, tick["lemma"])
                 if tick_mentioned:
