@@ -260,6 +260,41 @@ def infer_titles(doc, title_locations):
         location_to_entities[title_location] = location_entities
     return entity_indices, entity_signs, location_to_entities
 
+def match_units(tick_token, unit_lemmas):
+    """The function for matching units"""
+    num_token = tick_token
+    unit_token = tick_token
+    # Shift if the value is mentioned with the count and the unit
+    if unit_lemmas:
+        unit_match_count = 0
+        temp_num = tick_token
+        temp_unit = tick_token
+        if tick_token.head.lemma == unit_lemmas[0]:
+            head_token = tick_token
+            num_stop = False
+            for unit_lemma in unit_lemmas:
+                if head_token.head.lemma_ == unit_lemma:
+                    unit_match_count = unit_match_count + 1
+                    # Pass on the num root and the unit root
+                    if head_token.dep_ == "compound":
+                        if not num_stop:
+                            temp_num = head_token.head
+                            temp_unit = temp_num
+                        else:
+                            temp_unit = head_token.head
+                    if head_token.dep_ == "nummod":
+                        num_stop = True
+                        temp_unit = head_token.head
+                    # Trace back
+                    head_token = head_token.head
+                else:
+                    break
+        # Successfully match
+        if unit_match_count == len(unit_lemmas):
+            num_token = temp_num
+            unit_token = temp_unit
+    return num_token, unit_token
+
 def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
     """Infer the described entities via the axis ticks"""
     tick_locations = []
@@ -274,81 +309,69 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         v_token = None
         neg_sign = True
         conj_id = None
-        num_token = tick_token
-        unit_token = tick_token
-        # Shift if the value is mentioned with the count and the unit
-        
-        if unit_lemma is not None and tick_token.head.lemma == unit_lemmas[0]:
-            unit_match_count = 0
-            head_token = tick_token
-            for unit_lemma in unit_lemmas:
-                if head_token.head.lemma_ == unit_lemma:
-                    unit_match_count = unit_match_count + 1
-                    head_token = head_token.head
-                else:
-                    break
-            if unit_match_count == len(unit_lemmas):
-                tick_token = head_token
-        tick_locations.append(tick_token.i)
+        num_token, unit_token = match_units(tick_token, unit_lemmas)
+        tick_locations.append(unit_token.i)
         # Handle conjunction
-        if tick_token.dep_ == "conj":
-            head_token = tick_token.head
+        if unit_token.dep_ == "conj":
+            head_token = unit_token.head
             while head_token.dep_ == "conj":
                 head_token = head_token.head
             conj_id = head_token.i
         else:
             # Find the standard prep and the verb token
-            if tick_token.dep_ == "attr":
+            if unit_token.head.pos_ == "VERB":
+                temp_v = unit_token.head
                 than_found = False
                 amod_found = False
                 prep_lemma = None
-                for child in tick_token.children:
+                # Case: [verb] [more] [than] [tick] and [verb] [tick]
+                for child in num_token.children:
                     if child.dep_ == "quantmod" and child.lemma_ == "than":
                         than_found = True
                     if child.dep_ == "amod" and child.tag_ == "JJR":
                         amod_found = True
                         prep_lemma = child.lemma_
-                # Case 1: [entities] [be] [prep] [than] [ticks] ...
-                # Example: the sales of Huawei is higher than 250 million
+                # Found the "[than]" but cannot find the "[more]"
+                if than_found and not amod_found:
+                    for child in temp_v.children:
+                        if child.dep_ == "acomp" and child.tag_ == "JJR":
+                            amod_found = True
+                            prep_lemma = child.lemma_
+                # Case: [verb] [more] [than] [tick]
                 if than_found and amod_found:
                     std_prep = get_std_axis(prep_lemma)
                     if std_prep is not None:
                         std_found = True
                 else:
-                    # Case 2: [entities] [be] [ticks]
-                    # Example: the sales of Huawei is 250 million
+                    # Case: [verb] [tick]
                     std_prep = get_std_axis('at')
                     std_found = True
                 if std_found:
-                    v_token = tick_token.head
-            if tick_token.dep_ == "pobj":
-                prep_token = tick_token.head
-                if prep_token.lemma_ == "than":
-                    prep_token = prep_token.head
-                std_prep = get_std_axis(prep_token.lemma_)
-                if std_prep is not None:
-                    v_token = prep_token.head
-                    # handle negation
-                    for child in prep_token.children:
-                        if child.dep_ == "neg":
-                            neg_sign = False
-            if tick_token.dep_ == "dobj":
-                for child in tick_token.children:
-                    if child.dep_ == "quantmod":
-                        std_prep = get_std_axis(child.lemma_)
-                        if std_prep is not None:
-                            v_token = tick_token.head
+                    v_token = temp_v
+                    neg_sign = get_negation(v_token)
+            else:
+                # Case: [verb] [prep] [tick] and [entities] [prep] [tick]
+                if unit_token.dep_ == "pobj":
+                    prep_token = unit_token.head
+                    # Case: [prep] [than] [tick]
+                    if prep_token.lemma_ == "than":
+                        prep_token = prep_token.head
+                    std_prep = get_std_axis(prep_token.lemma_)
+                    if std_prep is not None:
+                        v_token = prep_token.head
+                    # Case: [verb] [prep] [tick]
+                    if v_token.pos_ == "VERB":
+                        neg_sign = get_negation(v_token)
+                    # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
+                    else:
+                        neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
             # Detect the entities
-            if v_token.pos_ == "attr":
-                v_token = v_token.head
             if v_token.pos_ == "VERB":
                 for child in v_token.children:
-                    # handle negation
-                    if child.dep_ == "neg":
-                        neg_sign = False
                     if child.dep_ == "nsubj":
+                        # The entry token for entities
                         child_location = child.i
                         if title_to_entities.get(child_location) is None:
                             tick_entities, tick_signs = infer_entities(child, True)
@@ -359,7 +382,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
             else:
                 v_location = v_token.i
                 if title_to_entities.get(v_location) is None:
-                    tick_entities, tick_signs = infer_entities(v_token, True)
+                    tick_entities, tick_signs = infer_entities(v_token, False)
                 else:
                     tick_entities = title_to_entities[v_location]
                     for tick_entity in tick_entities:
@@ -381,3 +404,12 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         "relations": entity_preps,
         "conjunctions": entity_conjs
     }
+
+def get_negation(token):
+    """Get the negation of some token"""
+    sign = True
+    for child in token.children:
+        if child.dep_ == "neg":
+            sign = False
+            break
+    return sign
