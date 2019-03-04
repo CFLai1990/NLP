@@ -62,6 +62,7 @@ def infer_axis(doc, entity_dict, axis_list):
             # pack the results in tick_entities
             tick_entities = []
             print('d_1')
+            print(axis_title, axis_unit)
             for tick_result in tick_results:
                 entities_by_location = tick_result["entities"]
                 if entities_by_location:
