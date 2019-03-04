@@ -18,17 +18,17 @@ def infer_axis(doc, entity_dict, axis_list):
         # the axis has been mentioned
         axis_id = axis_info["id"]
         axis_data = axis_list[axis_id]
+        axis_title = None
+        axis_unit = None
+        if axis_info["unit"]["existed"]:
+            axis_unit = axis_data["unit"]["text"]
+        if axis_info["title"]["existed"]:
+            axis_title = axis_data["title"]["text"]
         print('----------------- axis_data --------------------')
         print(axis_data)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
-            axis_title = None
-            axis_unit = None
-            if axis_info["unit"]["existed"]:
-                axis_unit = axis_data["unit"]["text"]
-            if axis_info["title"]["existed"]:
-                axis_title = axis_data["title"]["text"]
             title_root_id = axis_data["title"]["root"]
             title_locations = []
             for location in axis_info["title"]["locations"]:
