@@ -42,10 +42,8 @@ def infer_axis(doc, entity_dict, axis_list):
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
-                print('1')
                 tick_results.append(tick_result)
             # pack the results in tick_entities
-            print('2')
             tick_entities = []
             for tick_result in tick_results:
                 entities_by_location = tick_result["entities"]
@@ -61,7 +59,6 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
-            print('3')
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
@@ -87,7 +84,6 @@ def infer_axis(doc, entity_dict, axis_list):
                                         "locations": [tick_location]
                                         })
                                 break
-            print('4')
             # pack the results
             for tick_entity in tick_entities:
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
@@ -114,8 +110,10 @@ def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
 
 def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
     """Pack the entity dict by the ticks"""
+    print('1')
     entities = tick_entity["entities"]
     signs = tick_entity["signs"]
+    print('2')
     for _id, e_token_index in enumerate(entities):
         entity_id = 'entity_' + str(e_token_index)
         e_axis_state = {
@@ -128,6 +126,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             "relation": tick_entity["relation"],
             "sign": signs[_id]
         }
+        print('3')
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
             e_state = e_axis_state.update({
@@ -139,11 +138,13 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             }
         else:
             if 'axis' not in entity_dict[entity_id]:
+                print('4')
                 e_state = e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
                 entity_dict[entity_id]['axis'] = [e_state]
             else:
+                print('5')
                 # search for the corresponding axis
                 axis_found = False
                 for axis_state in entity_dict[entity_id]["axis"]:
