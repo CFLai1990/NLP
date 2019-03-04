@@ -275,7 +275,6 @@ def infer_titles(doc, title_locations):
         entity_indices.extend(location_entities)
         entity_signs.extend(location_signs)
         location_to_entities[title_location] = location_entities
-    print(location_entities)
     return entity_indices, entity_signs, location_to_entities
 
 def match_units(tick_token, unit_lemmas):
@@ -385,6 +384,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     else:
                         neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
+                print("Not found!")
                 continue
             # Detect the entities
             if v_token.pos_ == "VERB":
