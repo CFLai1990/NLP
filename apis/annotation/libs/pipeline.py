@@ -3,6 +3,7 @@ from .label_detection import infer_label
 from .color_detection import infer_color
 from .size_detection import infer_size
 from .location_detection import infer_loc
+from .axis_detection import infer_axis
 
 class NLPPipeline:
     """The pipeline class"""
@@ -21,4 +22,5 @@ class NLPPipeline:
         infer_color(doc, entities)
         infer_size(doc, entities)
         infer_loc(doc, entities)
+        infer_axis(doc, entities, od_data["axes"])
         return entities, labels
