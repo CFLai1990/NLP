@@ -11,6 +11,8 @@ def infer_axis(doc, entity_dict, axis_list):
         return
     for axis_info in axes_info:
         # the axis has not been mentioned
+        print('----------------- axis_data --------------------')
+        print(axis_data)
         print('a')
         if not axis_info["mentioned"]:
             continue
