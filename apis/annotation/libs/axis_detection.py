@@ -181,8 +181,8 @@ def search_for_axes(doc, axis_list):
                         "locations": tick_pos,
                     })
         print(axis["title"]["text"])
-        print("title_mentioned", title_mentioned)
-        print("unit_mentioned", unit_mentioned)
+        print("title", axis["title"]["lemma"])
+        print("unit", axis["unit"]["lemma"])
         print("tick_mentioned", ticks_mentioned)
         axis_mentioned = ticks_mentioned and unit_mentioned
         axes_info.append({
