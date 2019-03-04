@@ -180,6 +180,8 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         axis_state["ticks"].append(e_tick_state)
                         break
                 if not axis_found:
+                    print(e_axis_state)
+                    print(e_tick_state)
                     e_state = e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
