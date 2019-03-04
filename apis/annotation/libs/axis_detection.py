@@ -296,7 +296,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities):
                 prep_token = tick_token.head
                 if prep_token.lemma_ == "than":
                     prep_token = prep_token.head
-                std_prep = get_std_axis(prep_token)
+                std_prep = get_std_axis(prep_token.lemma_)
                 if std_prep is not None:
                     v_token = prep_token.head
                     # handle negation
