@@ -38,6 +38,7 @@ def infer_axis(doc, entity_dict, axis_list):
             tick_results = []
             unit_data = None
             print('c_1')
+            print(axis_data["title"]["text"])
             print(axis_info["unit"])
             if axis_info["unit"]["mentioned"]:
                 unit_data = axis_data["unit"]["lemma"]
