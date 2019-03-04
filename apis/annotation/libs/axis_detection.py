@@ -11,8 +11,10 @@ def infer_axis(doc, entity_dict, axis_list):
         return
     for axis_info in axes_info:
         # the axis has not been mentioned
+        print('a')
         if not axis_info["mentioned"]:
             continue
+        print('b')
         # the axis has been mentioned
         axis_id = axis_info["id"]
         axis_data = axis_list[axis_id]
@@ -29,6 +31,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 "unit": axis_data["unit"]["text"],
                 "ticks": []
                 })
+        print('c')
         # infer the entities via the axis ticks
         if axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
@@ -43,6 +46,7 @@ def infer_axis(doc, entity_dict, axis_list):
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
                 tick_results.append(tick_result)
+        print('d')
             # pack the results in tick_entities
             tick_entities = []
             for tick_result in tick_results:
@@ -59,6 +63,7 @@ def infer_axis(doc, entity_dict, axis_list):
                                 "relation": tick_result["relations"][_id],
                                 "locations": [tick_result["locations"][_id]],
                                 })
+        print('e')
             # handle conjunction to update tick_entities
             for tick_result in tick_results:
                 tick_conjs = tick_result["conjunctions"]
