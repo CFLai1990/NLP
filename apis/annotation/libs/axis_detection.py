@@ -172,7 +172,6 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                 # search for the corresponding axis
                 axis_found = False
                 print(e_axis_state)
-                print(e_state)
                 for axis_state in entity_dict[entity_id]["axis"]:
                     if e_axis_state["title"] is not None and axis_state["title"] == e_axis_state["title"]:
                         axis_found = True
@@ -184,6 +183,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                     e_state = e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
+                    print(e_state)
                     entity_dict[entity_id]['axis'].append(e_state)
 
 def search_for_axes(doc, axis_list):
