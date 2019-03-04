@@ -181,8 +181,8 @@ def search_for_axes(doc, axis_list):
                         "locations": tick_pos,
                     })
         print(axis["title"]["text"])
-        print("title", axis["title"]["lemma"])
-        print("unit", axis["unit"]["lemma"])
+        print("title_mentioned", title_mentioned)
+        print("unit_mentioned", unit_mentioned)
         print("tick_mentioned", ticks_mentioned)
         axis_mentioned = ticks_mentioned and unit_mentioned
         axes_info.append({
@@ -217,7 +217,9 @@ def search_for_label(doc, labels):
             else:
                 id_next = id_next + 1
         if id_next != 0 and id_next == len(labels):
+            label_mentioned = True
             label_indices.append(t_id)
+            break
     return label_mentioned, label_indices
 
 def infer_titles(doc, title_locations):
