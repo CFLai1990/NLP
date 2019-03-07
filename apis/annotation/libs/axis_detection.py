@@ -1,7 +1,7 @@
 """The function for detecting axis-based location descriptions"""
+import copy
 from .axis_dict import get_std_axis
 from .entity_detection import infer_entities
-import copy
 
 def infer_axis(doc, entity_dict, axis_list):
     """Axis-based location detection function"""
@@ -514,6 +514,7 @@ def get_negation(token):
 
 def make_up_for_axis(entity_dict):
     """Make up for the missing axes"""
+    print("make up started")
     axis_mention_list = {}
     id_to_entity = {}
     for entity_id, entity in entity_dict.items():
