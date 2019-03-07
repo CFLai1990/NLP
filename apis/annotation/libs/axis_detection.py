@@ -152,14 +152,13 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                 # search for the corresponding axis
                 axis_found = False
                 for axis_state in entity_dict[entity_id]["axis"]:
-                    if e_axis_state["title"] is not None:
-                        print("existed axis_title: ", axis_state["title"])
-                        print("target axis_title: ", e_axis_state["title"])
                     if e_axis_state["title"] is not None and axis_state["title"] == e_axis_state["title"]:
                         axis_found = True
                         if not axis_state["sign"]:
                             e_tick_state["sign"] = not e_tick_state["sign"]
                         axis_state["ticks"].append(e_tick_state)
+                        print("axis: ", axis_state["title"])
+                        print("ticks: ", e_tick_state)
                         break
                 if not axis_found:
                     print("axis not found: ", tick_entity["title"])
