@@ -1,7 +1,6 @@
 """The function for detecting axis-based location descriptions"""
 from .axis_dict import get_std_axis
 from .entity_detection import infer_entities
-import copy
 
 def infer_axis(doc, entity_dict, axis_list):
     """Axis-based location detection function"""
@@ -122,12 +121,12 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
     """Pack the entity dict by the ticks"""
     entities = tick_entity["entities"]
     signs = tick_entity["signs"]
-    e_axis_state = {
-        "title": tick_entity["title"],
-        "unit": tick_entity["unit"],
-        "sign": True,
-    }
     for _id, e_token_index in enumerate(entities):
+        e_axis_state = {
+            "title": tick_entity["title"],
+            "unit": tick_entity["unit"],
+            "sign": True,
+        }
         e_tick_state = {
             "values": tick_entity["tick_texts"],
             "relation": tick_entity["relation"],
@@ -136,7 +135,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
         entity_id = 'entity_' + str(e_token_index)
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
-            e_state = copy.deepcopy(e_axis_state).update({
+            e_state = e_axis_state.update({
                 "ticks": [e_tick_state]
             })
             entity_dict[entity_id] = {
@@ -146,7 +145,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
         else:
             if 'axis' not in entity_dict[entity_id]:
                 print("axis not existed: ", tick_entity["title"])
-                e_state = copy.deepcopy(e_axis_state).update({
+                e_state = e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
                 entity_dict[entity_id]['axis'] = [e_state]
@@ -161,13 +160,14 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         if not axis_state["sign"]:
                             e_tick_state["sign"] = not e_tick_state["sign"]
                         axis_state["ticks"].append(e_tick_state)
-                        # print("axis: ", axis_state["title"], " entity: ", entity_id)
-                        # print("ticks: ", e_tick_state)
-                        # print("existed ticks: ", axis_state["ticks"])
                         break
+                for entity in entity_dict:
+                    print("---- entity: ", entity["name"])
+                    for axis_state in entity_dict["axis"]:
+                        print("------ axis: ", axis_state)
                 if not axis_found:
                     print("axis not found: ", tick_entity["title"])
-                    entity_dict[entity_id]['axis'].append(copy.deepcopy(e_axis_state).update({
+                    entity_dict[entity_id]['axis'].append(e_axis_state.update({
                         "ticks": [e_tick_state]
                     }))
                 else:
