@@ -171,6 +171,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                     e_state = e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
+                    print('-- final_state: ', e_state)
                     entity_dict[entity_id]['axis'].append(e_state)
                 else:
                     print("axis found: ", tick_entity["title"])
