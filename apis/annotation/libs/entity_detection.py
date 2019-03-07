@@ -49,6 +49,7 @@ def infer_subjects(token):
     if not overall_sign:
         for index, sign in enumerate(signs):
             signs[index] = not sign
+    print("-- entities: ", entities)
     return entities, signs
 
 def infer_objects(token):
