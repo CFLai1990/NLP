@@ -21,6 +21,7 @@ AXIS_FULL = {
     'at': 0,
     'during': 0,
     'in': 0,
+    'within': 0,
     'to': 0,
     # above
     'above': 1,

@@ -10,21 +10,15 @@ def infer_axis(doc, entity_dict, axis_list):
     mentioned, axes_info = search_for_axes(doc, axis_list)
     if not mentioned:
         return
+    title_to_entities_all = {}
+    title_to_entities_dict = {}
+    # Step 1: Get all the titles mentioned
     for axis_info in axes_info:
         # the axis has not been mentioned
         if not axis_info["mentioned"]:
             continue
         # the axis has been mentioned
-        axis_id = axis_info["id"]
-        axis_data = axis_list[axis_id]
-        axis_title = None
-        axis_unit = None
-        if axis_info["unit"]["existed"]:
-            axis_unit = axis_data["unit"]["text"]
-            # axis_unit = ' '.join(axis_data["unit"]["lemma"])
-        if axis_info["title"]["existed"]:
-            axis_title = axis_data["title"]["text"]
-            # axis_title = ' '.join(axis_data["title"]["lemma"])
+        axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -38,6 +32,19 @@ def infer_axis(doc, entity_dict, axis_list):
                 "unit": axis_unit,
                 "ticks": []
                 })
+        if axis_title is not None:
+            title_to_entities_dict[axis_title] = title_to_entities
+        title_to_entities_all.update(title_to_entities)
+    # Step 2: Get all the ticks mentioned
+    for axis_info in axes_info:
+        # the axis has not been mentioned
+        if not axis_info["mentioned"]:
+            continue
+        # the axis has been mentioned
+        axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
+        title_to_entities = {}
+        if axis_title is not None:
+            title_to_entities = title_to_entities_dict.get(axis_title)
         # infer the entities via the axis ticks
         if axis_info["ticks"]["existed"] and axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
@@ -50,7 +57,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 tick_tokens = []
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
-                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, unit_data)
+                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, title_to_entities_all, unit_data)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
@@ -97,6 +104,20 @@ def infer_axis(doc, entity_dict, axis_list):
             for tick_entity in tick_entities:
                 print("-- tick entity: ", tick_entity)
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
+
+def extract_axis_info(axis_info, axis_list):
+    """Extract the axis information from the data structure"""
+    axis_id = axis_info["id"]
+    axis_data = axis_list[axis_id]
+    axis_title = None
+    axis_unit = None
+    if axis_info["unit"]["existed"]:
+        axis_unit = axis_data["unit"]["text"]
+        # axis_unit = ' '.join(axis_data["unit"]["lemma"])
+    if axis_info["title"]["existed"]:
+        axis_title = axis_data["title"]["text"]
+        # axis_title = ' '.join(axis_data["title"]["lemma"])
+    return axis_id, axis_data, axis_title, axis_unit
 
 def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
     """Pack the entity dict by the titles"""
@@ -327,7 +348,7 @@ def match_units(tick_token, unit_lemmas):
             unit_token = temp_unit
     return num_token, unit_token
 
-def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
+def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all, unit_lemmas=None):
     """Infer the described entities via the axis ticks"""
     print('tick started')
     tick_locations = []
@@ -357,6 +378,10 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 than_found = False
                 amod_found = False
                 prep_lemma = None
+                other_title = {
+                    "found": False,
+                    "location": None
+                }
                 # Case: [verb] [more] [than] [tick] and [verb] [tick]
                 for child in num_token.children:
                     if child.dep_ == "quantmod" and child.lemma_ == "than":
@@ -392,18 +417,22 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     std_prep = get_std_axis(prep_token.lemma_)
                     if std_prep is not None:
                         v_token = prep_token.head
-                    # Special Case: [prep] [than] in time
+                    # Special Cases for 'in time' descriptions
                     if v_token is not None:
-                        if v_token.lemma_ == "than":
-                            v_token = v_token.head.head
-                        if v_token.dep_ == "amod":
-                            v_token = v_token.head
-                        if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
-                            v_token = v_token.head
-                        if v_token.dep_ == "pobj":
-                            v_token = v_token.head.head.head
-                        if v_token.dep_ == "dobj":
-                            v_token = v_token.head
+                        if title_to_entities_all.get(v_token.i) is not None:
+                            other_title["found"] = True
+                            other_title["location"] = v_token.i
+                        else:
+                            if v_token.lemma_ == "than":
+                                v_token = v_token.head.head
+                            if v_token.dep_ == "amod":
+                                v_token = v_token.head
+                            if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
+                                v_token = v_token.head
+                            if v_token.dep_ == "pobj":
+                                v_token = v_token.head.head.head
+                            if v_token.dep_ == "dobj":
+                                v_token = v_token.head
                     # Case: [verb] [prep] [tick]
                     if v_token is not None and v_token.pos_ == "VERB":
                         neg_sign = get_negation(v_token)
@@ -432,7 +461,10 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                             for tick_entity in tick_entities:
                                 tick_signs.append(True)
             else:
-                v_location = v_token.i
+                if other_title["found"]:
+                    v_location = other_title["location"]
+                else:
+                    v_location = v_token.i
                 if title_to_entities.get(v_location) is None:
                     tick_entities, tick_signs = infer_entities(v_token, False)
                 else:
