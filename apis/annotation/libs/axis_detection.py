@@ -275,7 +275,6 @@ def infer_titles(doc, title_locations):
         entity_indices.extend(location_entities)
         entity_signs.extend(location_signs)
         location_to_entities[title_location] = location_entities
-    print("location_to_entities: ", location_to_entities)
     return entity_indices, entity_signs, location_to_entities
 
 def match_units(tick_token, unit_lemmas):
@@ -405,8 +404,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     if child.dep_ == "nsubj":
                         # The entry token for entities
                         child_location = child.i
-                        print("-- entity location: ")
-                        print(child_location)
+                        print("-- entity location: ", child_location)
+                        print("-- title_to_entities: ", title_to_entities)
                         if title_to_entities.get(child_location) is None:
                             tick_entities, tick_signs = infer_entities(child, True)
                         else:
