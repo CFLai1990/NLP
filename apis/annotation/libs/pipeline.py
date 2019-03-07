@@ -12,7 +12,7 @@ class NLPPipeline:
     def __init__(self, model):
         self.nlp = model
 
-    def infer(self, sentence, od_data=None):
+    def infer(self, sentence, od_data=None, trans_list=None):
         """The main entry for NLP"""
         doc = self.nlp(sentence)
         # Get the entities described by their labels
