@@ -275,6 +275,7 @@ def infer_titles(doc, title_locations):
         entity_indices.extend(location_entities)
         entity_signs.extend(location_signs)
         location_to_entities[title_location] = location_entities
+    print("location_to_entities: ", location_to_entities)
     return entity_indices, entity_signs, location_to_entities
 
 def match_units(tick_token, unit_lemmas):
