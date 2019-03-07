@@ -34,7 +34,7 @@ class FakeOD {
   constructor (socket) {
     this.socket = socket
     this.message = MESSAGE
-    this.data = FAKEDATA_PIE
+    this.data = FAKEDATA_BAR
     this.handleReceive()
   }
 
