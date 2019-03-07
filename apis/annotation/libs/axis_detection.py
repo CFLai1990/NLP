@@ -425,6 +425,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             other_title["found"] = True
                             other_title["location"] = v_token.i
                         else:
+                            print("v_token: ", v_token.lemma_)
                             if v_token.lemma_ == "than":
                                 v_token = v_token.head.head
                             if v_token.dep_ == "amod":
