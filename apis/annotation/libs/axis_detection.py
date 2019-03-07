@@ -549,6 +549,6 @@ def make_up_for_axis(entity_dict):
                 print(axis_title, ' ', min_id)
                 # Copy the axis of the closest entity
                 target_axes = id_to_entity[min_id]["axis"]
-                for axis in target_axes.values():
+                for axis in target_axes:
                     if axis["title"] == axis_title:
                         entity_axes.append(copy.deepcopy(axis))
