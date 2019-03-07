@@ -372,16 +372,16 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                 head_token = head_token.head
             conj_id = head_token.i
         else:
+            other_title = {
+                "found": False,
+                "location": None
+            }
             # Find the standard prep and the verb token
             if unit_token.head.pos_ == "VERB":
                 temp_v = unit_token.head
                 than_found = False
                 amod_found = False
                 prep_lemma = None
-                other_title = {
-                    "found": False,
-                    "location": None
-                }
                 # Case: [verb] [more] [than] [tick] and [verb] [tick]
                 for child in num_token.children:
                     if child.dep_ == "quantmod" and child.lemma_ == "than":
