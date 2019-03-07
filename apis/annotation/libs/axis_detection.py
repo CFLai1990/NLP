@@ -19,7 +19,6 @@ def infer_axis(doc, entity_dict, axis_list):
             continue
         # the axis title or ticks have been mentioned
         axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
-        print("****** axis_title (before): ", axis_title)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -28,17 +27,16 @@ def infer_axis(doc, entity_dict, axis_list):
             for location in axis_info["title"]["locations"]:
                 title_locations.append(location + title_root_id)
             title_entities, title_signs, title_to_entities = infer_titles(doc, title_locations)
+            # Pack the results whether or not the ticks have been mentioned
             pack_entity_dict_by_title(doc, entity_dict, title_entities, title_signs, {
                 "title": axis_title,
                 "unit": axis_unit,
                 "ticks": []
                 })
-        print("****** axis_title (after): ", axis_title)
-        print("****** title_to_entities", title_to_entities)
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
+        print("*** title_to_entities_dict", title_to_entities_dict)
         title_to_entities_all.update(title_to_entities)
-    print("title_to_entities_dict: ", title_to_entities_dict)
     # Step 2: Get all the ticks mentioned
     for axis_info in axes_info:
         # the axis has not been mentioned
@@ -49,7 +47,6 @@ def infer_axis(doc, entity_dict, axis_list):
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
-        print("$$$$$$$$ title_to_entities: ", axis_title)
         print(title_to_entities)
         # infer the entities via the axis ticks
         if axis_info["ticks"]["existed"] and axis_info["ticks"]["mentioned"]:
@@ -278,7 +275,6 @@ def search_for_label(doc, labels):
         if id_next != 0 and id_next == len(labels):
             label_mentioned = True
             label_indices.append(t_id)
-            break
     return label_mentioned, label_indices
 
 def infer_titles(doc, title_locations):
