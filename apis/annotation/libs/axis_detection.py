@@ -20,8 +20,10 @@ def infer_axis(doc, entity_dict, axis_list):
         axis_unit = None
         if axis_info["unit"]["existed"]:
             axis_unit = axis_data["unit"]["text"]
+            # axis_unit = ' '.join(axis_data["unit"]["lemma"])
         if axis_info["title"]["existed"]:
             axis_title = axis_data["title"]["text"]
+            # axis_title = ' '.join(axis_data["title"]["lemma"])
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -150,6 +152,9 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                 # search for the corresponding axis
                 axis_found = False
                 for axis_state in entity_dict[entity_id]["axis"]:
+                    if e_axis_state["title"] is not None:
+                        print("existed axis_title: ", axis_state["axis"])
+                        print("target axis_title: ", e_axis_state["title"])
                     if e_axis_state["title"] is not None and axis_state["title"] == e_axis_state["title"]:
                         axis_found = True
                         if not axis_state["sign"]:
