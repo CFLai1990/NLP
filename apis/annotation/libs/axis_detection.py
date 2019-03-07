@@ -9,6 +9,8 @@ def infer_axis(doc, entity_dict, axis_list):
     mentioned, axes_info = search_for_axes(doc, axis_list)
     if not mentioned:
         return
+    print("Axes_info: ")
+    print(axes_info)
     for axis_info in axes_info:
         # the axis has not been mentioned
         if not axis_info["mentioned"]:
@@ -393,8 +395,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
                     else:
                         neg_sign = get_negation(prep_token)
-            print(std_prep)
-            print(v_token.lemma_)
             if std_prep is None or v_token is None:
                 continue
             # Detect the entities
