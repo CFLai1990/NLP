@@ -136,20 +136,20 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
         entity_id = 'entity_' + str(e_token_index)
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
-            e_state = e_axis_state.update({
+            e_axis_state.update({
                 "ticks": [e_tick_state]
             })
             entity_dict[entity_id] = {
                 'name': e_token.lemma_,
-                'axis': [e_state]
+                'axis': [e_axis_state]
             }
         else:
             if 'axis' not in entity_dict[entity_id]:
                 print("axis not existed: ", tick_entity["title"])
-                e_state = e_axis_state.update({
+                e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
-                entity_dict[entity_id]['axis'] = [e_state]
+                entity_dict[entity_id]['axis'] = [e_axis_state]
             else:
                 # search for the corresponding axis
                 axis_found = False
@@ -168,11 +168,11 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                     print("axis not found: ", tick_entity["title"])
                     print('-- axis_state: ', e_axis_state)
                     print('-- tick_state: ', e_tick_state)
-                    e_state = e_axis_state.update({
+                    e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
-                    print('-- final_state: ', e_state)
-                    entity_dict[entity_id]['axis'].append(e_state)
+                    print('-- final_state: ', e_axis_state)
+                    entity_dict[entity_id]['axis'].append(e_axis_state)
                 else:
                     print("axis found: ", tick_entity["title"])
 
