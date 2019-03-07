@@ -537,6 +537,7 @@ def make_up_for_axis(entity_dict):
         print(e_id, ' ', entity_axes)
         for axis_title, mentioned_ids in axis_mention_list.items():
             # If the axis is not mentioned with this entity
+            print(axis_title, ' ', mentioned_ids)
             if e_id not in mentioned_ids:
                 min_dist = float('inf')
                 min_id = None
