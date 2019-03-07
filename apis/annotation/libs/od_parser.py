@@ -92,7 +92,6 @@ class ODParser:
     def parse_legend_label(self, label_text=None):
         """The function for parsing legends"""
         label = None
-        print("label_text: ", label_text)
         if label_text is not None:
             label = self.label_parser.get_data(label_text)
         return label
@@ -130,13 +129,11 @@ class ODParser:
         # Pack the results
         if data is not None:
             # Parse the labels
-            print("labels")
             results["labels"] = self.parse_data_label(data.get("labels"))
             # Parse the axes
             if data.get("axes") is not None:
                 axes = []
                 for axis in data["axes"]:
-                    print("axes")
                     axis_title, axis_unit = self.parse_axis_label(axis.get("label"))
                     axis_ticks = self.parse_axis_ticks(axis.get("ticks"))
                     axes.append({
@@ -149,7 +146,6 @@ class ODParser:
             if data.get("legends") is not None:
                 legends = []
                 for legend in data["legends"]:
-                    print("legends")
                     legend_label = self.parse_legend_label(legend.get("label"))
                     legend_feature = self.parse_legend_feature(legend.get("feature"))
                     legends.append({
