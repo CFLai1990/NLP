@@ -421,23 +421,22 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                         v_token = prep_token.head
                     # Special Cases for 'in time' descriptions
                     if v_token is not None:
+                        if v_token.lemma_ == "than":
+                            v_token = v_token.head.head
+                        if v_token.dep_ == "amod":
+                            v_token = v_token.head
+                        if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
+                            v_token = v_token.head.head
+                        if v_token.dep_ == "pobj":
+                            v_token = v_token.head.head
+                            if v_token.dep_ == "acomp":
+                                v_token = v_token.head
+                        if v_token.dep_ == "dobj":
+                            v_token = v_token.head
+                        # Handle the case when other titles have been mentioned
                         if title_to_entities_all.get(v_token.i) is not None:
                             other_title["found"] = True
                             other_title["location"] = v_token.i
-                        else:
-                            print("v_token: ", v_token.lemma_)
-                            if v_token.lemma_ == "than":
-                                v_token = v_token.head.head
-                            if v_token.dep_ == "amod":
-                                v_token = v_token.head
-                            if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
-                                v_token = v_token.head.head
-                            if v_token.dep_ == "pobj":
-                                v_token = v_token.head.head
-                                if v_token.dep_ == "acomp":
-                                    v_token = v_token.head
-                            if v_token.dep_ == "dobj":
-                                v_token = v_token.head
                     # Case: [verb] [prep] [tick]
                     if v_token is not None and v_token.pos_ == "VERB":
                         neg_sign = get_negation(v_token)
