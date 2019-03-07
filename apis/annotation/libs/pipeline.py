@@ -22,7 +22,5 @@ class NLPPipeline:
         infer_color(doc, entities)
         infer_size(doc, entities)
         infer_loc(doc, entities)
-        print('started')
         infer_axis(doc, entities, od_data["axes"])
-        print('ended')
         return entities, labels
