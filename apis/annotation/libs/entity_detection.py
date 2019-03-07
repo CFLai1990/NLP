@@ -40,6 +40,7 @@ def infer_subjects(token):
                 overall_sign = get_relation(child_text)
             # Case 4: "A's XXX"
             if child.dep_ == "poss":
+                is_pron = True
                 entities.append(child.i)
                 signs.append(True)
     if not is_pron:
@@ -49,7 +50,6 @@ def infer_subjects(token):
     if not overall_sign:
         for index, sign in enumerate(signs):
             signs[index] = not sign
-    print("-- entities: ", entities)
     return entities, signs
 
 def infer_objects(token):
