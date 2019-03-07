@@ -405,7 +405,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                         # The entry token for entities
                         child_location = child.i
                         print("-- entity location: ", child_location)
-                        print("-- title_to_entities (before): ", title_to_entities)
+                        print("-- title_to_entities: ", title_to_entities)
                         if title_to_entities.get(child_location) is None:
                             tick_entities, tick_signs = infer_entities(child, True)
                         else:
@@ -425,7 +425,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                 for sign_id, tick_sign in enumerate(tick_signs):
                     tick_signs[sign_id] = not tick_sign
             # Update
-        print("-- title_to_entities (after): ", title_to_entities)
         entity_indices.append(tick_entities)
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)

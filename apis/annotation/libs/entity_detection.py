@@ -34,10 +34,14 @@ def infer_subjects(token):
                         if grand_child.dep_ == "pobj":
                             get_children(grand_child, entities, signs,
                                          child_overall_sign, is_subject=True)
-            # Case 3: 'Both A and B' or 'Neither A or B'
-            if child.dep_ == 'preconj':
+            # Case 3: "Both A and B" or "Neither A or B"
+            if child.dep_ == "preconj":
                 child_text = child.lemma_
                 overall_sign = get_relation(child_text)
+            # Case 4: "A's XXX"
+            if child.dep_ == "poss":
+                entities.append(child.i)
+                signs.append(True)
     if not is_pron:
         entities.append(token.i)
         signs.append(True)
