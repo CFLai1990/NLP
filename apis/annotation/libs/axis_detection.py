@@ -157,8 +157,9 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         if not axis_state["sign"]:
                             e_tick_state["sign"] = not e_tick_state["sign"]
                         axis_state["ticks"].append(e_tick_state)
-                        print("axis: ", axis_state["title"])
+                        print("axis: ", axis_state["title"], " entity: ", e_token_index)
                         print("ticks: ", e_tick_state)
+                        print("existed ticks: ", axis_state["ticks"])
                         break
                 if not axis_found:
                     print("axis not found: ", tick_entity["title"])
