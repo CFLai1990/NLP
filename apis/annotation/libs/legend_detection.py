@@ -35,8 +35,9 @@ def pack_entity_by_legend(entity, legend_label, legend_feature):
     if color is not None:
         entity_color = entity.get("color")
         if entity_color is None:
-            entity_color = [color] = True
-            entity_color[color] = True
+            entity_color = {
+                color: True
+            }
             entity["color"] = entity_color
         else:
             entity_color[color] = True
