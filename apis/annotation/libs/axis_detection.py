@@ -14,10 +14,10 @@ def infer_axis(doc, entity_dict, axis_list):
     title_to_entities_dict = {}
     # Step 1: Get all the titles mentioned
     for axis_info in axes_info:
-        # the axis title has not been mentioned
-        if not axis_info["title"]["mentioned"]:
+        # the axis title or ticks have not been mentioned
+        if not (axis_info["title"]["mentioned"] or axis_info["mentioned"]):
             continue
-        # the axis title has been mentioned
+        # the axis title or ticks have been mentioned
         axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
         print("****** axis_title (before): ", axis_title)
         title_to_entities = {}
