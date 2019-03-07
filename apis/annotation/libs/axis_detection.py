@@ -377,8 +377,18 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                     std_prep = get_std_axis(prep_token.lemma_)
                     if std_prep is not None:
                         v_token = prep_token.head
+                    # Special Case: [prep] [than] in time
+                    if v_token is not None:
+                        if v_token.lemma_ == "than":
+                            v_token = v_token.head.head
+                        if v_token.dep_ == "amod":
+                            v_token = v_token.head
+                        if v_token.head.pos_ == "VERB":
+                            v_token = v_token.head
+                        if v_token.dep_ == "pobj":
+                            v_token = v_token.head.head.head
                     # Case: [verb] [prep] [tick]
-                    if v_token.pos_ == "VERB":
+                    if v_token is not None and v_token.pos_ == "VERB":
                         neg_sign = get_negation(v_token)
                     # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
                     else:
