@@ -30,7 +30,7 @@ def infer_subjects(token):
                 token_text = token.lemma_
                 child_overall_sign = get_relation(token_text)
                 is_pron = True
-                if child.text == 'of' and child.children:
+                if child.lemma_ == 'of' and child.children:
                     for grand_child in child.children:
                         if grand_child.dep_ == "pobj":
                             get_children(grand_child, entities, signs,

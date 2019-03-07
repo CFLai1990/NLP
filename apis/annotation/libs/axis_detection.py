@@ -45,6 +45,8 @@ def infer_axis(doc, entity_dict, axis_list):
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
+        print("$$$$$$$$ title_to_entities: ", axis_title)
+        print(title_to_entities)
         # infer the entities via the axis ticks
         if axis_info["ticks"]["existed"] and axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
@@ -296,7 +298,7 @@ def infer_titles(doc, title_locations):
         for child in title_token.children:
             # Case ~2: [title] [prep] [subject]
             # Example: temperature of Beijing
-            if child.dep_ == "prep":
+            if child.dep_ == "prep" and child.lemma_ == "of":
                 for grand_child in child.children:
                     if grand_child.dep_ == "pobj":
                         entities, signs = infer_entities(grand_child, True)
@@ -486,7 +488,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
         entity_conjs.append(conj_id)
-    print('-- entities', entity_indices)
+    print("-- entities", entity_indices)
     print('tick ended')
     return {
         "text": tick_text,
