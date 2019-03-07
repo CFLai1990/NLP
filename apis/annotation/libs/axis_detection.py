@@ -137,7 +137,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
             e_state = copy.deepcopy(e_axis_state).update({
-                "ticks": [copy.deepcopy(e_tick_state)]
+                "ticks": [e_tick_state]
             })
             entity_dict[entity_id] = {
                 'name': e_token.lemma_,
@@ -147,7 +147,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             if 'axis' not in entity_dict[entity_id]:
                 print("axis not existed: ", tick_entity["title"])
                 e_state = copy.deepcopy(e_axis_state).update({
-                    "ticks": [copy.deepcopy(e_tick_state)]
+                    "ticks": [e_tick_state]
                 })
                 entity_dict[entity_id]['axis'] = [e_state]
             else:
@@ -160,7 +160,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         axis_found = True
                         if not axis_state["sign"]:
                             e_tick_state["sign"] = not e_tick_state["sign"]
-                        axis_state["ticks"].append(copy.deepcopy(e_tick_state))
+                        axis_state["ticks"].append(e_tick_state)
                         # print("axis: ", axis_state["title"], " entity: ", entity_id)
                         # print("ticks: ", e_tick_state)
                         # print("existed ticks: ", axis_state["ticks"])
@@ -168,7 +168,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                 if not axis_found:
                     print("axis not found: ", tick_entity["title"])
                     entity_dict[entity_id]['axis'].append(copy.deepcopy(e_axis_state).update({
-                        "ticks": [copy.deepcopy(e_tick_state)]
+                        "ticks": [e_tick_state]
                     }))
                 else:
                     print("axis found: ", tick_entity["title"])
