@@ -93,6 +93,7 @@ class ODParser:
     def parse_legend_label(self, label_text=None):
         """The function for parsing legends"""
         label = None
+        print("label_text: ", label_text)
         if label_text is not None:
             label = self.label_parser.get_data(label_text)
         return label
