@@ -92,7 +92,6 @@ def infer_axis(doc, entity_dict, axis_list):
                                 break
             # pack the results
             for tick_entity in tick_entities:
-                print("-- tick entity: ", tick_entity)
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
 
 def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
@@ -142,6 +141,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             }
         else:
             if 'axis' not in entity_dict[entity_id]:
+                print("axis not existed: ", tick_entity["title"])
                 e_state = e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
@@ -157,10 +157,13 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         axis_state["ticks"].append(e_tick_state)
                         break
                 if not axis_found:
+                    print("axis not found: ", tick_entity["title"])
                     e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
                     entity_dict[entity_id]['axis'].append(e_axis_state)
+                else:
+                    print("axis found: ", tick_entity["title"])
 
 def search_for_axes(doc, axis_list):
     """Determine if each axis has been mentioned"""
