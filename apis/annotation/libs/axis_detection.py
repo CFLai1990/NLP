@@ -121,17 +121,8 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
     entities = tick_entity["entities"]
     signs = tick_entity["signs"]
     for _id, e_token_index in enumerate(entities):
+        e_axis_state, e_tick_state = new_axis_state(tick_entity, signs[_id])
         entity_id = 'entity_' + str(e_token_index)
-        e_axis_state = {
-            "title": tick_entity["title"],
-            "unit": tick_entity["unit"],
-            "sign": True,
-        }
-        e_tick_state = {
-            "values": tick_entity["tick_texts"],
-            "relation": tick_entity["relation"],
-            "sign": signs[_id]
-        }
         if not entity_dict.get(entity_id):
             e_token = doc[e_token_index]
             e_state = e_axis_state.update({
@@ -171,6 +162,20 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                     entity_dict[entity_id]['axis'].append(e_axis_state)
                 else:
                     print("axis found: ", tick_entity["title"])
+
+def new_axis_state(tick_entity, tick_sign):
+    """Create a new state for the axis"""
+    e_axis_state = {
+        "title": tick_entity["title"],
+        "unit": tick_entity["unit"],
+        "sign": True,
+    }
+    e_tick_state = {
+        "values": tick_entity["tick_texts"],
+        "relation": tick_entity["relation"],
+        "sign": tick_sign
+    }
+    return e_axis_state, e_tick_state
 
 def search_for_axes(doc, axis_list):
     """Determine if each axis has been mentioned"""
