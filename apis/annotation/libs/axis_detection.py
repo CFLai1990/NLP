@@ -162,9 +162,7 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                         axis_state["ticks"].append(e_tick_state)
                         break
                 for entity in entity_dict:
-                    print("---- entity: ", entity["name"])
-                    for axis_state in entity_dict["axis"]:
-                        print("------ axis: ", axis_state)
+                    print("---- entity: ", entity)
                 if not axis_found:
                     print("axis not found: ", tick_entity["title"])
                     entity_dict[entity_id]['axis'].append(e_axis_state.update({
