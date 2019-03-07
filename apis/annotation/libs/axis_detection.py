@@ -107,6 +107,8 @@ def infer_axis(doc, entity_dict, axis_list):
             for tick_entity in tick_entities:
                 print("-- tick entity: ", tick_entity)
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
+    # Step 3 (optional): make up for the missing attributes
+    make_up_for_axis(entity_dict)
 
 def extract_axis_info(axis_info, axis_list):
     """Extract the axis information from the data structure"""
@@ -509,3 +511,41 @@ def get_negation(token):
             sign = False
             break
     return sign
+
+def make_up_for_axis(entity_dict):
+    """Make up for the missing axes"""
+    axis_mention_list = {}
+    id_to_entity = {}
+    for entity_id, entity in entity_dict.items():
+        e_id = int(entity_id.replace('entity_', ''))
+        id_to_entity[e_id] = entity
+        entity_axes = entity.get("axis")
+        if entity_axes:
+            for entity_axis in entity_axes:
+                axis_title = entity_axis["title"]
+            if axis_title is not None:
+                if axis_mention_list.get(axis_title) is None:
+                    axis_mention_list[axis_title] = [e_id]
+                else:
+                    axis_mention_list[axis_title].append(e_id)
+    for e_id, entity in id_to_entity.items():
+        entity_axes = entity.get("axis")
+        if entity_axes is None:
+            entity_axes = []
+            entity["axis"] = entity_axes
+        for axis_title, mentioned_ids in axis_mention_list.items():
+            # If the axis is not mentioned with this entity
+            if e_id not in mentioned_ids:
+                min_dist = float('inf')
+                min_id = None
+                # Find the closest entity that has this axis
+                for m_id in mentioned_ids:
+                    dist = abs(m_id - e_id)
+                    if dist < min_dist:
+                        min_dist = dist
+                        min_id = e_id
+                # Copy the axis of the closest entity
+                target_axes = id_to_entity[min_id]["axis"]
+                for axis in target_axes.values():
+                    if axis["title"] == axis_title:
+                        entity_axes.append(copy.deepcopy(axis))
