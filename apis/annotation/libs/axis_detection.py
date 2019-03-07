@@ -432,6 +432,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
         entity_conjs.append(conj_id)
+    print('-- entities')
+    print(entity_indices)
     print('tick ended')
     return {
         "text": tick_text,
