@@ -402,6 +402,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                             v_token = v_token.head
                         if v_token.dep_ == "pobj":
                             v_token = v_token.head.head.head
+                        if v_token.dep_ == "dobj":
+                            v_token = v_token.head
                     # Case: [verb] [prep] [tick]
                     if v_token is not None and v_token.pos_ == "VERB":
                         neg_sign = get_negation(v_token)
@@ -415,6 +417,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
             print("-- verb token: ", v_token.lemma_)
             # Detect the entities
             if v_token.pos_ == "VERB":
+                while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
+                    v_token = v_token.head
                 for child in v_token.children:
                     if child.dep_ == "nsubj":
                         # The entry token for entities
