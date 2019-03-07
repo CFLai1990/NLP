@@ -422,23 +422,22 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     if std_prep is not None:
                         v_token = prep_token.head
                     # Special Cases for 'in time' descriptions
-                    if v_token is not None:
-                        if v_token.lemma_ == "than":
-                            v_token = v_token.head.head
-                        if v_token.dep_ == "amod":
-                            v_token = v_token.head
-                        if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
-                            v_token = v_token.head.head
-                        if v_token.dep_ == "pobj":
-                            v_token = v_token.head.head
-                            if v_token.dep_ == "acomp":
+                    other_title_found = get_other_title(title_to_entities, other_title, v_token.i)
+                    if not other_title_found:
+                        if v_token is not None:
+                            if v_token.lemma_ == "than":
+                                v_token = v_token.head.head
+                            if v_token.dep_ == "amod":
                                 v_token = v_token.head
-                        if v_token.dep_ == "dobj":
-                            v_token = v_token.head
-                        # Handle the case when other titles have been mentioned
-                        if title_to_entities_all.get(v_token.i) is not None:
-                            other_title["found"] = True
-                            other_title["location"] = v_token.i
+                            if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
+                                v_token = v_token.head.head
+                            if v_token.dep_ == "pobj":
+                                v_token = v_token.head.head
+                                if v_token.dep_ == "acomp":
+                                    v_token = v_token.head
+                            if v_token.dep_ == "dobj":
+                                v_token = v_token.head
+                            get_other_title(title_to_entities, other_title, v_token.i)
                     # Case: [verb] [prep] [tick]
                     if v_token is not None and v_token.pos_ == "VERB":
                         neg_sign = get_negation(v_token)
@@ -502,6 +501,15 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
         "relations": entity_preps,
         "conjunctions": entity_conjs
     }
+
+def get_other_title(title_to_entities_all, other_title, token_location):
+    """Handle the case when other titles have been mentioned"""
+    other_title_found = False
+    if title_to_entities_all.get(token_location) is not None:
+        other_title_found = True
+        other_title["found"] = True
+        other_title["location"] = token_location
+    return other_title_found
 
 def get_negation(token):
     """Get the negation of some token"""
