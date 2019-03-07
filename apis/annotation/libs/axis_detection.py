@@ -19,6 +19,7 @@ def infer_axis(doc, entity_dict, axis_list):
             continue
         # the axis title has been mentioned
         axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
+        print("****** axis_title (before): ", axis_title)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -32,6 +33,8 @@ def infer_axis(doc, entity_dict, axis_list):
                 "unit": axis_unit,
                 "ticks": []
                 })
+        print("****** axis_title (after): ", axis_title)
+        print("****** title_to_entities", title_to_entities)
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
         title_to_entities_all.update(title_to_entities)
