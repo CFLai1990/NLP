@@ -383,7 +383,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                             v_token = v_token.head.head
                         if v_token.dep_ == "amod":
                             v_token = v_token.head
-                        if v_token.head.pos_ == "VERB":
+                        if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
                             v_token = v_token.head
                         if v_token.dep_ == "pobj":
                             v_token = v_token.head.head.head
