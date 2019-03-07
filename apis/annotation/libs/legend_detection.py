@@ -34,9 +34,13 @@ def pack_entity_by_legend(entity, legend_label, legend_feature):
     color = legend_feature.get("color")
     if color is not None:
         entity_color = entity.get("color")
+        print('1')
         if entity_color is None:
+            print('2')
             entity_color = []
+            print('3')
             entity["color"] = entity_color
+            print('4')
         entity_color[color] = True
 
 def search_for_legends(doc, legend_list):
