@@ -446,6 +446,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
             print("-- verb token: ", v_token.lemma_)
             # Detect the entities
             if v_token.pos_ == "VERB":
+                print("is VERB")
                 while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
                     v_token = v_token.head
                 for child in v_token.children:
@@ -461,6 +462,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             for tick_entity in tick_entities:
                                 tick_signs.append(True)
             else:
+                print("is not VERB")
+                print(other_title)
                 if other_title["found"]:
                     v_location = other_title["location"]
                     tick_entities = title_to_entities_all[v_location]
