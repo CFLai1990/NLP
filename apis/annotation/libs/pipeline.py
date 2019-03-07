@@ -20,10 +20,17 @@ class NLPPipeline:
         #     infer_label(sentence, labels, od_data["labels"])
         # Get the entities described by their visual features
         entities = {}
+        print('label')
         infer_label(doc, entities, od_data["labels"])
+        print('legend')
         infer_legend(doc, entities, od_data["legends"])
+        print('color')
         infer_color(doc, entities)
+        print('size')
         infer_size(doc, entities)
+        print('loc')
         infer_loc(doc, entities)
+        print('axis')
         infer_axis(doc, entities, od_data["axes"])
+        print('end')
         return entities
