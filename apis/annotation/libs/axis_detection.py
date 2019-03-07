@@ -529,6 +529,7 @@ def make_up_for_axis(entity_dict):
                     axis_mention_list[axis_title] = [e_id]
                 else:
                     axis_mention_list[axis_title].append(e_id)
+    print("preparation ended")
     for e_id, entity in id_to_entity.items():
         entity_axes = entity.get("axis")
         if entity_axes is None:
