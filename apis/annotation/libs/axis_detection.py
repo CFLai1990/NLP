@@ -463,14 +463,17 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
             else:
                 if other_title["found"]:
                     v_location = other_title["location"]
-                else:
-                    v_location = v_token.i
-                if title_to_entities.get(v_location) is None:
-                    tick_entities, tick_signs = infer_entities(v_token, False)
-                else:
-                    tick_entities = title_to_entities[v_location]
+                    tick_entities = title_to_entities_all[v_location]
                     for tick_entity in tick_entities:
                         tick_signs.append(True)
+                else:
+                    v_location = v_token.i
+                    if title_to_entities.get(v_location) is None:
+                        tick_entities, tick_signs = infer_entities(v_token, False)
+                    else:
+                        tick_entities = title_to_entities[v_location]
+                        for tick_entity in tick_entities:
+                            tick_signs.append(True)
             # Handle global negation
             if not neg_sign:
                 for sign_id, tick_sign in enumerate(tick_signs):
