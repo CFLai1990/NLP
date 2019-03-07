@@ -1,6 +1,7 @@
 """The function for detecting axis-based location descriptions"""
 from .axis_dict import get_std_axis
 from .entity_detection import infer_entities
+import copy
 
 def infer_axis(doc, entity_dict, axis_list):
     """Axis-based location detection function"""
@@ -101,7 +102,7 @@ def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
     """Pack the entity dict by the titles"""
     for _id, e_token_index in enumerate(entities):
         entity_id = 'entity_' + str(e_token_index)
-        e_state = state.copy()
+        e_state = copy.deepcopy(state)
         e_state.update({
             'sign': signs[_id]
         })
