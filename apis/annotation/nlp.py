@@ -27,13 +27,11 @@ class ApiClass(API):
         entities = {}
         labels = {}
         for index, sent in enumerate(sentences):
-            sent_entities, sent_labels = self.pipeline.infer(sent['content'], od_data)
+            sent_entities = self.pipeline.infer(sent['content'], od_data)
             entities['st_' + str(index)] = sent_entities
-            labels['st_' + str(index)] = sent_labels
         return {
             'sentences': sentences,
             'entities': entities,
-            'labels': labels
         }
 
     def execute(self, data):

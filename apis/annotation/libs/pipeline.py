@@ -15,14 +15,15 @@ class NLPPipeline:
         """The main entry for NLP"""
         doc = self.nlp(sentence)
         # Get the entities described by their labels
-        labels = {}
-        if od_data is not None:
-            infer_label(sentence, labels, od_data["labels"])
+        # labels = {}
+        # if od_data is not None:
+        #     infer_label(sentence, labels, od_data["labels"])
         # Get the entities described by their visual features
         entities = {}
+        infer_label(doc, entities, od_data["labels"])
+        infer_legend(doc, entities, od_data["legends"])
         infer_color(doc, entities)
         infer_size(doc, entities)
         infer_loc(doc, entities)
         infer_axis(doc, entities, od_data["axes"])
-        infer_legend(doc, entities, od_data["legends"])
-        return entities, labels
+        return entities

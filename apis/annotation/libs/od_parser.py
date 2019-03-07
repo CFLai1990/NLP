@@ -2,12 +2,33 @@
 import json
 from .color_dict import get_std_color
 
+class SpacyLabel:
+    """The class for labels"""
+    def __init__(self, model):
+        self.model = model
+
+    def get_data(self, label_text=None):
+        """The function for parsing the text and getting the data result"""
+        data = {
+            "text": label_text,
+            "lemma": [],
+            "root": None
+        }
+        if label_text is not None:
+            doc = self.model(label_text)
+            for token in doc:
+                data["lemma"].append(token.lemma_)
+                if token.dep_ == "ROOT":
+                    data["root"] = token.i
+        return data
+
 class ODParser:
     """The class for data parsing"""
     def __init__(self, file_op, model=None):
         self.file_op = file_op
         self.model = model
         self.data = None
+        self.label_parser = SpacyLabel(model)
 
     def parse_axis_label(self, labels):
         """The function for parsing the axis label"""
@@ -59,40 +80,32 @@ class ODParser:
                         title["root"] = title_id
         return title, unit
 
-    def parse_axis_ticks(self, tick_list):
+    def parse_axis_ticks(self, tick_list=None):
         """The function for parsing the axis ticks"""
         ticks = None
         if tick_list is not None:
             ticks = []
             for tick_text in tick_list:
-                tick = {
-                    "text": tick_text,
-                    "lemma": [],
-                    "root": None
-                }
-                tick_doc = self.model(tick_text)
-                for tick_id, tick_token in enumerate(tick_doc):
-                    tick["lemma"].append(tick_token.lemma_)
-                    if tick_token.dep_ == "ROOT":
-                        tick["root"] = tick_id
+                tick = self.label_parser.get_data(tick_text)
                 ticks.append(tick)
         return ticks
 
-    def parse_legend_label(self, label_list):
+    def parse_legend_label(self, label_text=None):
         """The function for parsing legends"""
         label = None
-        if label_list is not None:
-            label = {
-                "text": None,
-                "lemma": []
-            }
-            # Assume the "labels" list contains only one category name
-            for label_text in label_list:
-                label["text"] = label_text
-                label_doc = self.model(label_text)
-                for label_token in label_doc:
-                    label["lemma"].append(label_token.lemma_)
+        if label_text is not None:
+            label = self.label_parser.get_data(label_text)
         return label
+
+    def parse_data_label(self, data_labels=None):
+        """The function for parsing legends"""
+        labels = None
+        if data_labels:
+            labels = []
+            for data_label in data_labels:
+                label_result = self.label_parser.get_data(data_label)
+                labels.append(label_result)
+        return labels
 
     def parse_legend_feature(self, feature_dict):
         """The function for parsing the legend features"""
@@ -117,10 +130,7 @@ class ODParser:
         # Pack the results
         if data is not None:
             # Parse the labels
-            if data.get("labels") is not None:
-                results["labels"] = data["labels"]
-            else:
-                results["labels"] = []
+            results["labels"] = self.parse_data_label(data.get("labels"))
             # Parse the axes
             if data.get("axes") is not None:
                 axes = []
