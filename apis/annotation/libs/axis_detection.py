@@ -524,11 +524,11 @@ def make_up_for_axis(entity_dict):
         if entity_axes:
             for entity_axis in entity_axes:
                 axis_title = entity_axis["title"]
-            if axis_title is not None:
-                if axis_mention_list.get(axis_title) is None:
-                    axis_mention_list[axis_title] = [e_id]
-                else:
-                    axis_mention_list[axis_title].append(e_id)
+                if axis_title is not None:
+                    if axis_mention_list.get(axis_title) is None:
+                        axis_mention_list[axis_title] = [e_id]
+                    else:
+                        axis_mention_list[axis_title].append(e_id)
     print('1: ', axis_mention_list)
     for e_id, entity in id_to_entity.items():
         entity_axes = entity.get("axis")
