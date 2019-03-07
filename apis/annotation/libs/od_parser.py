@@ -30,38 +30,37 @@ class ODParser:
         self.data = None
         self.label_parser = SpacyLabel(model)
 
-    def parse_axis_label(self, labels):
+    def parse_axis_label(self, label):
         """The function for parsing the axis label"""
         title = None
         unit = None
-        if labels is not None:
-            for label in labels:
-                left_brc = label.find("(")
-                right_brc = label.find(")")
-                if left_brc >= 0 and right_brc >= 0:
-                    # The unit does exist
-                    # Case 1: "[title] ([unit])"
-                    if title is None and left_brc > 0:
-                        title = {}
-                        title_text = label[0:left_brc]
-                        if title_text[len(title_text)-1] == ' ':
-                            title["text"] = label[0:left_brc-1]
-                        else:
-                            title["text"] = title_text
-                        title["lemma"] = []
-                        title["root"] = None
-                    unit = {}
-                    unit["text"] = label[(left_brc+1):right_brc]
-                    unit["lemma"] = []
-                    unit["root"] = None
-                else:
-                    # The unit does not exist
-                    # or Case 2: "[title] \n ([units])"
-                    if title is None:
-                        title = {}
-                        title["text"] = label
-                        title["lemma"] = []
-                        title["root"] = None
+        if label is not None:
+            left_brc = label.find("(")
+            right_brc = label.find(")")
+            if left_brc >= 0 and right_brc >= 0:
+                # The unit does exist
+                # Case 1: "[title] ([unit])"
+                if title is None and left_brc > 0:
+                    title = {}
+                    title_text = label[0:left_brc]
+                    if title_text[len(title_text)-1] == ' ':
+                        title["text"] = label[0:left_brc-1]
+                    else:
+                        title["text"] = title_text
+                    title["lemma"] = []
+                    title["root"] = None
+                unit = {}
+                unit["text"] = label[(left_brc+1):right_brc]
+                unit["lemma"] = []
+                unit["root"] = None
+            else:
+                # The unit does not exist
+                # or Case 2: "[title] \n ([units])"
+                if title is None:
+                    title = {}
+                    title["text"] = label
+                    title["lemma"] = []
+                    title["root"] = None
             # Assume the "labels" list contains only one title and one unit
             if unit is not None:
                 # Get the unit
