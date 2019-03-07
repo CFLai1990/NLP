@@ -1,7 +1,6 @@
 """nlp: the main api for NLP"""
-import json
 from .__settings__ import API, OD_PATH
-from .libs import pipeline
+from .libs import pipeline, parser
 
 class ApiClass(API):
     """API Class"""
@@ -9,16 +8,7 @@ class ApiClass(API):
         API.__init__(self, parameters)
         self.nlp_model = parameters['spacy']
         self.pipeline = pipeline(self.nlp_model)
-
-    def get_od_data(self):
-        """Get the results from the OD module"""
-        od_path = self.file_op.get_path(OD_PATH)
-        od_data = None
-        if self.file_op.exists(od_path):
-            with open(od_path, 'r') as file:
-                od_data = json.load(file)
-                file.close()
-        return od_data
+        self.parser = parser(self.file_op)
 
     def get_sentences(self, doc):
         """Get the sentence segmentation results"""
@@ -37,17 +27,15 @@ class ApiClass(API):
         entities = {}
         labels = {}
         for index, sent in enumerate(sentences):
-            sent_entities, sent_labels = self.pipeline.infer(sent['content'], od_data)
+            sent_entities = self.pipeline.infer(sent['content'], od_data)
             entities['st_' + str(index)] = sent_entities
-            labels['st_' + str(index)] = sent_labels
         return {
             'sentences': sentences,
             'entities': entities,
-            'labels': labels
         }
 
     def execute(self, data):
-        od_data = self.get_od_data()
+        od_data = self.parser.load(OD_PATH)
         result = self.nlp(data, od_data)
         self.emit2client(result)
         self.logger.info('API executed')

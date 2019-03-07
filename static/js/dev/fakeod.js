@@ -8,23 +8,23 @@ const FAKEDATA_PIE = {
 const FAKEDATA_BAR = {
   'axes': [
     {
-      'label': ['Sales (In Millions)'],
+      'label': 'Sales (In Millions)',
       'ticks': ['0', '50', '100', '150', '200', '250', '300', '350', '400', '450']
     }, {
-      'label': ['Year'],
+      'label': 'Year',
       'ticks': ['2013', '2014', '2015', '2016', '2017']
     }
   ],
   'labels': [],
   'legends': [
     {
-      'label': ['Samsung'],
+      'label': 'Samsung',
       'feature': {'color': 'blue'}
     }, {
-      'label': ['Apple'],
+      'label': 'Apple',
       'feature': {'color': 'orange'}
     }, {
-      'label': ['Huawei'],
+      'label': 'Huawei',
       'feature': {'color': 'green'}
     }
   ]

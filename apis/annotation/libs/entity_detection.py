@@ -20,8 +20,9 @@ def infer_subjects(token):
             # Case 1: A, B, C, ... [conj] N
             # Example: A, B, and C are ...
             if child.dep_ == "conj":
-                entities.append(token.i)
-                signs.append(True)
+                if token.i not in entities:
+                    entities.append(token.i)
+                    signs.append(True)
                 get_children(child, entities, signs, is_subject=True)
             # Case 2: [pron] of A, B, ... [conj] N
             # Example: None of A, B, and C is ...
@@ -29,18 +30,25 @@ def infer_subjects(token):
                 token_text = token.lemma_
                 child_overall_sign = get_relation(token_text)
                 is_pron = True
-                if child.text == 'of' and child.children:
+                if child.lemma_ == 'of' and child.children:
                     for grand_child in child.children:
                         if grand_child.dep_ == "pobj":
                             get_children(grand_child, entities, signs,
                                          child_overall_sign, is_subject=True)
-            # Case 3: 'Both A and B' or 'Neither A or B'
-            if child.dep_ == 'preconj':
+            # Case 3: "Both A and B" or "Neither A or B"
+            if child.dep_ == "preconj":
                 child_text = child.lemma_
                 overall_sign = get_relation(child_text)
+            # Case 4: "A's XXX"
+            if child.dep_ == "poss":
+                is_pron = True
+                if child.i not in entities:
+                    entities.append(child.i)
+                    signs.append(True)
     if not is_pron:
-        entities.append(token.i)
-        signs.append(True)
+        if token.i not in entities:
+            entities.append(token.i)
+            signs.append(True)
     # Handle case 3: neither ...
     if not overall_sign:
         for index, sign in enumerate(signs):
@@ -51,8 +59,9 @@ def infer_objects(token):
     """Entity detection when the entities are objects"""
     entities = []
     signs = []
-    entities.append(token.i)
-    signs.append(True)
+    if token.i not in entities:
+        entities.append(token.i)
+        signs.append(True)
     if token.children:
         for child in token.children:
             # Case 1: A, B, C, ... [conj] N
