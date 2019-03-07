@@ -108,7 +108,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 print("-- tick entity: ", tick_entity)
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
     # Step 3 (optional): make up for the missing attributes
-    # make_up_for_axis(entity_dict)
+    make_up_for_axis(entity_dict)
 
 def extract_axis_info(axis_info, axis_list):
     """Extract the axis information from the data structure"""
