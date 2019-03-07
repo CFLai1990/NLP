@@ -35,7 +35,6 @@ def infer_axis(doc, entity_dict, axis_list):
                 })
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
-        print("*** title_to_entities_dict", title_to_entities_dict)
         title_to_entities_all.update(title_to_entities)
     # Step 2: Get all the ticks mentioned
     for axis_info in axes_info:
@@ -47,7 +46,6 @@ def infer_axis(doc, entity_dict, axis_list):
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
-        print(title_to_entities)
         # infer the entities via the axis ticks
         if axis_info["ticks"]["existed"] and axis_info["ticks"]["mentioned"]:
             ticks_info = axis_info["ticks"]["data"]
@@ -105,7 +103,6 @@ def infer_axis(doc, entity_dict, axis_list):
                                 break
             # pack the results
             for tick_entity in tick_entities:
-                print("-- tick entity: ", tick_entity)
                 pack_entity_dict_by_tick(doc, entity_dict, tick_entity)
     # Step 3 (optional): make up for the missing attributes
     make_up_for_axis(entity_dict)
@@ -171,7 +168,6 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
             }
         else:
             if 'axis' not in entity_dict[entity_id]:
-                print("axis not existed: ", tick_entity["title"])
                 e_axis_state.update({
                     "ticks": [e_tick_state]
                 })
@@ -180,27 +176,17 @@ def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
                 # search for the corresponding axis
                 axis_found = False
                 for axis_state in entity_dict[entity_id]["axis"]:
-                    print("axis: ", axis_state["title"], " entity: ", entity_id)
-                    print("axis_state: ", axis_state)
                     if e_axis_state["title"] is not None and axis_state["title"] == e_axis_state["title"]:
                         axis_found = True
                         if not axis_state["sign"]:
                             e_tick_state["sign"] = not e_tick_state["sign"]
                         axis_state["ticks"].append(e_tick_state)
                         break
-                for __id, entity in entity_dict.items():
-                    print("---- entity: ", entity)
                 if not axis_found:
-                    print("axis not found: ", tick_entity["title"])
-                    print('-- axis_state: ', e_axis_state)
-                    print('-- tick_state: ', e_tick_state)
                     e_axis_state.update({
                         "ticks": [e_tick_state]
                     })
-                    print('-- final_state: ', e_axis_state)
                     entity_dict[entity_id]['axis'].append(e_axis_state)
-                else:
-                    print("axis found: ", tick_entity["title"])
 
 def search_for_axes(doc, axis_list):
     """Determine if each axis has been mentioned"""
@@ -354,7 +340,6 @@ def match_units(tick_token, unit_lemmas):
 
 def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all, unit_lemmas=None):
     """Infer the described entities via the axis ticks"""
-    print('tick started')
     tick_locations = []
     entity_indices = []
     entity_signs = []
@@ -446,20 +431,14 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                         neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
-            print("-- num token: ", num_token.lemma_)
-            print("-- prep token: ", std_prep)
-            print("-- verb token: ", v_token.lemma_)
             # Detect the entities
             if v_token.pos_ == "VERB":
-                print("is VERB")
                 while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
                     v_token = v_token.head
                 for child in v_token.children:
                     if child.dep_ == "nsubj":
                         # The entry token for entities
                         child_location = child.i
-                        print("-- entity location: ", child_location)
-                        print("-- title_to_entities: ", title_to_entities)
                         if title_to_entities.get(child_location) is None:
                             tick_entities, tick_signs = infer_entities(child, True)
                         else:
@@ -467,8 +446,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             for tick_entity in tick_entities:
                                 tick_signs.append(True)
             else:
-                print("is not VERB")
-                print(other_title)
                 if other_title["found"]:
                     v_location = other_title["location"]
                     tick_entities = title_to_entities_all[v_location]
@@ -491,8 +468,6 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
         entity_conjs.append(conj_id)
-    print("-- entities", entity_indices)
-    print('tick ended')
     return {
         "text": tick_text,
         "locations": tick_locations,
@@ -522,7 +497,6 @@ def get_negation(token):
 
 def make_up_for_axis(entity_dict):
     """Make up for the missing axes"""
-    print("make up started")
     axis_mention_list = {}
     id_to_entity = {}
     for entity_id, entity in entity_dict.items():
@@ -537,16 +511,13 @@ def make_up_for_axis(entity_dict):
                         axis_mention_list[axis_title] = [e_id]
                     else:
                         axis_mention_list[axis_title].append(e_id)
-    print('1: ', axis_mention_list)
     for e_id, entity in id_to_entity.items():
         entity_axes = entity.get("axis")
         if entity_axes is None:
             entity_axes = []
             entity["axis"] = entity_axes
-        print('2: ', e_id, ' ', entity_axes)
         for axis_title, mentioned_ids in axis_mention_list.items():
             # If the axis is not mentioned with this entity
-            print('3: ', axis_title, ' ', mentioned_ids)
             if e_id not in mentioned_ids:
                 min_dist = float('inf')
                 min_id = None
@@ -556,7 +527,6 @@ def make_up_for_axis(entity_dict):
                     if dist < min_dist:
                         min_dist = dist
                         min_id = m_id
-                print('4: ', axis_title, ' ', min_id)
                 # Copy the axis of the closest entity
                 target_axes = id_to_entity[min_id]["axis"]
                 for axis in target_axes:
