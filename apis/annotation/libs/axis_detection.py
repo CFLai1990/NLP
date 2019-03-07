@@ -529,12 +529,12 @@ def make_up_for_axis(entity_dict):
                     axis_mention_list[axis_title] = [e_id]
                 else:
                     axis_mention_list[axis_title].append(e_id)
-    print("preparation ended")
     for e_id, entity in id_to_entity.items():
         entity_axes = entity.get("axis")
         if entity_axes is None:
             entity_axes = []
             entity["axis"] = entity_axes
+        print(e_id, ' ', entity_axes)
         for axis_title, mentioned_ids in axis_mention_list.items():
             # If the axis is not mentioned with this entity
             if e_id not in mentioned_ids:
@@ -546,6 +546,7 @@ def make_up_for_axis(entity_dict):
                     if dist < min_dist:
                         min_dist = dist
                         min_id = e_id
+                print(axis_title, ' ', min_id)
                 # Copy the axis of the closest entity
                 target_axes = id_to_entity[min_id]["axis"]
                 for axis in target_axes.values():
