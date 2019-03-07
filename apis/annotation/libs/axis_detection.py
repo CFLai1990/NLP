@@ -395,12 +395,9 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
                         neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
-            print("-- num token: ")
-            print(num_token.lemma_)
-            print("-- prep token: ")
-            print(std_prep)
-            print("-- verb token: ")
-            print(v_token.lemma_)
+            print("-- num token: ", num_token.lemma_)
+            print("-- prep token: ", std_prep)
+            print("-- verb token: ", v_token.lemma_)
             # Detect the entities
             if v_token.pos_ == "VERB":
                 for child in v_token.children:
@@ -432,8 +429,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, unit_lemmas=None):
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
         entity_conjs.append(conj_id)
-    print('-- entities')
-    print(entity_indices)
+    print('-- entities', entity_indices)
     print('tick ended')
     return {
         "text": tick_text,
