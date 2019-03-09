@@ -410,6 +410,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             if from_child.dep_ == "pobj":
                                 conj_id = from_child.i
                                 break
+                        print("from conjunction: ", conj_id)
                     if conj_id is None:
                         std_prep = get_std_axis(prep_token.lemma_)
                         if std_prep is not None:
