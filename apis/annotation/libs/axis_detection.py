@@ -416,7 +416,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                                 conj_id = from_child.i
                                 break
                         print("from conjunction: ", conj_id)
-                        std_prep = get_std_axis(prep_token.lemma_)
+                    std_prep = get_std_axis(prep_token.lemma_)
                     if conj_id is None:
                         if std_prep is not None:
                             v_token = prep_token.head
