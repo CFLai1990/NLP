@@ -59,7 +59,6 @@ def infer_axis(doc, entity_dict, axis_list):
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, title_to_entities_all, unit_data)
-                print("tick_result", tick_result)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
@@ -405,17 +404,12 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     if prep_token.lemma_ == "than":
                         prep_token = prep_token.head
                     # Case: from [tick] to [tick]
-                    print("num_token: ", num_token.lemma_)
-                    print("unit_token: ", unit_token.lemma_)
-                    print("prep_token: ", prep_token.lemma_)
-                    print("prep_token.head: ", prep_token.head.lemma_)
                     if prep_token.lemma_ == "to" and prep_token.head.lemma_ == "from":
                         prep_token = prep_token.head
                         for from_child in prep_token.children:
                             if from_child.dep_ == "pobj":
                                 conj_id = from_child.i
                                 break
-                        print("from conjunction: ", conj_id)
                     std_prep = get_std_axis(prep_token.lemma_)
                     if conj_id is None:
                         if std_prep is not None:
