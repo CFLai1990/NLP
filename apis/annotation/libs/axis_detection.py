@@ -59,6 +59,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
                 tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, title_to_entities_all, unit_data)
+                print("tick_result", tick_result)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
