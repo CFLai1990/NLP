@@ -445,41 +445,42 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                         # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
                         else:
                             neg_sign = get_negation(prep_token)
-            if std_prep is None or v_token is None:
+            if (std_prep is None or v_token is None) and conj_id is None:
                 continue
-            # Detect the entities
-            if v_token.pos_ == "VERB":
-                while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
-                    v_token = v_token.head
-                for child in v_token.children:
-                    if child.dep_ == "nsubj":
-                        # The entry token for entities
-                        child_location = child.i
-                        if title_to_entities.get(child_location) is None:
-                            tick_entities, tick_signs = infer_entities(child, True)
-                        else:
-                            tick_entities = title_to_entities[child_location]
-                            for tick_entity in tick_entities:
-                                tick_signs.append(True)
-            else:
-                if other_title["found"]:
-                    v_location = other_title["location"]
-                    tick_entities = title_to_entities_all[v_location]
-                    for tick_entity in tick_entities:
-                        tick_signs.append(True)
+            if conj_id is None:
+                # Detect the entities
+                if v_token.pos_ == "VERB":
+                    while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
+                        v_token = v_token.head
+                    for child in v_token.children:
+                        if child.dep_ == "nsubj":
+                            # The entry token for entities
+                            child_location = child.i
+                            if title_to_entities.get(child_location) is None:
+                                tick_entities, tick_signs = infer_entities(child, True)
+                            else:
+                                tick_entities = title_to_entities[child_location]
+                                for tick_entity in tick_entities:
+                                    tick_signs.append(True)
                 else:
-                    v_location = v_token.i
-                    if title_to_entities.get(v_location) is None:
-                        tick_entities, tick_signs = infer_entities(v_token, False)
-                    else:
-                        tick_entities = title_to_entities[v_location]
+                    if other_title["found"]:
+                        v_location = other_title["location"]
+                        tick_entities = title_to_entities_all[v_location]
                         for tick_entity in tick_entities:
                             tick_signs.append(True)
-            # Handle global negation
-            if not neg_sign:
-                for sign_id, tick_sign in enumerate(tick_signs):
-                    tick_signs[sign_id] = not tick_sign
-            # Update
+                    else:
+                        v_location = v_token.i
+                        if title_to_entities.get(v_location) is None:
+                            tick_entities, tick_signs = infer_entities(v_token, False)
+                        else:
+                            tick_entities = title_to_entities[v_location]
+                            for tick_entity in tick_entities:
+                                tick_signs.append(True)
+                # Handle global negation
+                if not neg_sign:
+                    for sign_id, tick_sign in enumerate(tick_signs):
+                        tick_signs[sign_id] = not tick_sign
+        # Update
         entity_indices.append(tick_entities)
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
