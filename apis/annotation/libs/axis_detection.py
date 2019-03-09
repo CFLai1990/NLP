@@ -405,38 +405,40 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                         prep_token = prep_token.head
                     # Case: from [tick] to [tick]
                     if prep_token.lemma_ == "to" and prep_token.head.lemma_ == "from":
-                        prep_token = prep_token.head
-                    std_prep = get_std_axis(prep_token.lemma_)
-                    if std_prep is not None:
-                        v_token = prep_token.head
-                    # Special Cases for 'in time' descriptions
-                    print('num_token: ', num_token.lemma_)
-                    print('unit_token: ', unit_token.lemma_)
-                    print('v_token: ', v_token.lemma_)
-                    other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
-                    if not other_title_found:
-                        if v_token is not None:
-                            if v_token.dep_ == "prep":
-                                v_token = v_token.head
-                            if v_token.dep_ == "amod":
-                                v_token = v_token.head
-                            if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
-                                v_token = v_token.head.head
-                            if v_token.dep_ == "pobj":
-                                v_token = v_token.head.head
+                        from_token = prep_token.head
+                        for from_child in from_token.children:
+                            if from_child.dep_ == "pobj":
+                                conj_id = from_child.i
+                                break
+                    if conj_id is None:
+                        std_prep = get_std_axis(prep_token.lemma_)
+                        if std_prep is not None:
+                            v_token = prep_token.head
+                        # Special Cases for 'in time' descriptions
+                        other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
+                        if not other_title_found:
+                            if v_token is not None:
+                                if v_token.dep_ == "prep":
+                                    v_token = v_token.head
+                                if v_token.dep_ == "amod":
+                                    v_token = v_token.head
+                                if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
+                                    v_token = v_token.head.head
+                                if v_token.dep_ == "pobj":
+                                    v_token = v_token.head.head
+                                    if v_token.dep_ == "acomp":
+                                        v_token = v_token.head
                                 if v_token.dep_ == "acomp":
                                     v_token = v_token.head
-                            if v_token.dep_ == "acomp":
-                                v_token = v_token.head
-                            if v_token.dep_ == "dobj":
-                                v_token = v_token.head
-                            get_other_title(title_to_entities_all, other_title, v_token.i)
-                    # Case: [verb] [prep] [tick]
-                    if v_token is not None and v_token.pos_ == "VERB":
-                        neg_sign = get_negation(v_token)
-                    # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
-                    else:
-                        neg_sign = get_negation(prep_token)
+                                if v_token.dep_ == "dobj":
+                                    v_token = v_token.head
+                                get_other_title(title_to_entities_all, other_title, v_token.i)
+                        # Case: [verb] [prep] [tick]
+                        if v_token is not None and v_token.pos_ == "VERB":
+                            neg_sign = get_negation(v_token)
+                        # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
+                        else:
+                            neg_sign = get_negation(prep_token)
             if std_prep is None or v_token is None:
                 continue
             # Detect the entities
