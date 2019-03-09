@@ -88,7 +88,7 @@ def infer_axis(doc, entity_dict, axis_list):
                         for tick_entity in tick_entities:
                             if tick_conj_id in tick_entity["locations"]:
                                 std_prep = tick_entity["relation"]
-                                if std_prep == "between":
+                                if std_prep in ("between", "from_to"):
                                     tick_entity["tick_texts"].append(tick_text)
                                     tick_entity["locations"].append(tick_location)
                                 else:
@@ -410,14 +410,14 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     print("prep_token: ", prep_token.lemma_)
                     print("prep_token.head: ", prep_token.head.lemma_)
                     if prep_token.lemma_ == "to" and prep_token.head.lemma_ == "from":
-                        from_token = prep_token.head
-                        for from_child in from_token.children:
+                        prep_token = prep_token.head
+                        for from_child in prep_token.children:
                             if from_child.dep_ == "pobj":
                                 conj_id = from_child.i
                                 break
                         print("from conjunction: ", conj_id)
-                    if conj_id is None:
                         std_prep = get_std_axis(prep_token.lemma_)
+                    if conj_id is None:
                         if std_prep is not None:
                             v_token = prep_token.head
                         # Special Cases for 'in time' descriptions
