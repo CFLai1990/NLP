@@ -87,7 +87,7 @@ def infer_axis(doc, entity_dict, axis_list):
                         for tick_entity in tick_entities:
                             if tick_conj_id in tick_entity["locations"]:
                                 std_prep = tick_entity["relation"]
-                                if std_prep == "between":
+                                if std_prep in ("between", "from_to"):
                                     tick_entity["tick_texts"].append(tick_text)
                                     tick_entity["locations"].append(tick_location)
                                 else:
@@ -403,67 +403,78 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     # Case: [prep] [than] [tick]
                     if prep_token.lemma_ == "than":
                         prep_token = prep_token.head
+                    # Case: from [tick] to [tick]
+                    if prep_token.lemma_ == "to" and prep_token.head.lemma_ == "from":
+                        prep_token = prep_token.head
+                        for from_child in prep_token.children:
+                            if from_child.dep_ == "pobj":
+                                conj_id = from_child.i
+                                break
                     std_prep = get_std_axis(prep_token.lemma_)
-                    if std_prep is not None:
-                        v_token = prep_token.head
-                    # Special Cases for 'in time' descriptions
-                    other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
-                    if not other_title_found:
-                        if v_token is not None:
-                            if v_token.lemma_ == "than":
-                                v_token = v_token.head.head
-                            if v_token.dep_ == "amod":
-                                v_token = v_token.head
-                            if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
-                                v_token = v_token.head.head
-                            if v_token.dep_ == "pobj":
-                                v_token = v_token.head.head
+                    if conj_id is None:
+                        if std_prep is not None:
+                            v_token = prep_token.head
+                        # Special Cases for 'in time' descriptions
+                        other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
+                        if not other_title_found:
+                            if v_token is not None:
+                                if v_token.dep_ == "prep":
+                                    v_token = v_token.head
+                                if v_token.dep_ == "amod":
+                                    v_token = v_token.head
+                                if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
+                                    v_token = v_token.head.head
+                                if v_token.dep_ == "pobj":
+                                    v_token = v_token.head.head
+                                    if v_token.dep_ == "acomp":
+                                        v_token = v_token.head
                                 if v_token.dep_ == "acomp":
                                     v_token = v_token.head
-                            if v_token.dep_ == "dobj":
-                                v_token = v_token.head
-                            get_other_title(title_to_entities_all, other_title, v_token.i)
-                    # Case: [verb] [prep] [tick]
-                    if v_token is not None and v_token.pos_ == "VERB":
-                        neg_sign = get_negation(v_token)
-                    # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
-                    else:
-                        neg_sign = get_negation(prep_token)
-            if std_prep is None or v_token is None:
-                continue
-            # Detect the entities
-            if v_token.pos_ == "VERB":
-                while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
-                    v_token = v_token.head
-                for child in v_token.children:
-                    if child.dep_ == "nsubj":
-                        # The entry token for entities
-                        child_location = child.i
-                        if title_to_entities.get(child_location) is None:
-                            tick_entities, tick_signs = infer_entities(child, True)
+                                if v_token.dep_ == "dobj":
+                                    v_token = v_token.head
+                                get_other_title(title_to_entities_all, other_title, v_token.i)
+                        # Case: [verb] [prep] [tick]
+                        if v_token is not None and v_token.pos_ == "VERB":
+                            neg_sign = get_negation(v_token)
+                        # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
                         else:
-                            tick_entities = title_to_entities[child_location]
-                            for tick_entity in tick_entities:
-                                tick_signs.append(True)
-            else:
-                if other_title["found"]:
-                    v_location = other_title["location"]
-                    tick_entities = title_to_entities_all[v_location]
-                    for tick_entity in tick_entities:
-                        tick_signs.append(True)
+                            neg_sign = get_negation(prep_token)
+            if (std_prep is None or v_token is None) and conj_id is None:
+                continue
+            if conj_id is None:
+                # Detect the entities
+                if v_token.pos_ == "VERB":
+                    while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
+                        v_token = v_token.head
+                    for child in v_token.children:
+                        if child.dep_ == "nsubj":
+                            # The entry token for entities
+                            child_location = child.i
+                            if title_to_entities.get(child_location) is None:
+                                tick_entities, tick_signs = infer_entities(child, True)
+                            else:
+                                tick_entities = title_to_entities[child_location]
+                                for tick_entity in tick_entities:
+                                    tick_signs.append(True)
                 else:
-                    v_location = v_token.i
-                    if title_to_entities.get(v_location) is None:
-                        tick_entities, tick_signs = infer_entities(v_token, False)
-                    else:
-                        tick_entities = title_to_entities[v_location]
+                    if other_title["found"]:
+                        v_location = other_title["location"]
+                        tick_entities = title_to_entities_all[v_location]
                         for tick_entity in tick_entities:
                             tick_signs.append(True)
-            # Handle global negation
-            if not neg_sign:
-                for sign_id, tick_sign in enumerate(tick_signs):
-                    tick_signs[sign_id] = not tick_sign
-            # Update
+                    else:
+                        v_location = v_token.i
+                        if title_to_entities.get(v_location) is None:
+                            tick_entities, tick_signs = infer_entities(v_token, False)
+                        else:
+                            tick_entities = title_to_entities[v_location]
+                            for tick_entity in tick_entities:
+                                tick_signs.append(True)
+                # Handle global negation
+                if not neg_sign:
+                    for sign_id, tick_sign in enumerate(tick_signs):
+                        tick_signs[sign_id] = not tick_sign
+        # Update
         entity_indices.append(tick_entities)
         entity_signs.append(tick_signs)
         entity_preps.append(std_prep)
