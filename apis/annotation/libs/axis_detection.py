@@ -416,8 +416,8 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
                     if not other_title_found:
                         if v_token is not None:
-                            if v_token.lemma_ == "than":
-                                v_token = v_token.head.head
+                            if v_token.dep_ == "prep":
+                                v_token = v_token.head
                             if v_token.dep_ == "amod":
                                 v_token = v_token.head
                             if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
