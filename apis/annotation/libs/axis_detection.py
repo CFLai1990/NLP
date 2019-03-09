@@ -407,6 +407,9 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     if std_prep is not None:
                         v_token = prep_token.head
                     # Special Cases for 'in time' descriptions
+                    print('num_token: ', num_token.lemma_)
+                    print('unit_token: ', unit_token.lemma_)
+                    print('v_token: ', v_token.lemma_)
                     other_title_found = get_other_title(title_to_entities_all, other_title, v_token.i)
                     if not other_title_found:
                         if v_token is not None:
