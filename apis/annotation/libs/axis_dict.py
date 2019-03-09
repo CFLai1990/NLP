@@ -14,6 +14,7 @@ AXIS_STANDARD = [
     'above',
     'below',
     'between',
+    'from_to',
 ]
 
 AXIS_FULL = {
@@ -38,4 +39,6 @@ AXIS_FULL = {
     'less': 2,
     # between
     'between': 3,
+    # from to
+    'from': 4,
 }

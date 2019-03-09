@@ -403,6 +403,9 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     # Case: [prep] [than] [tick]
                     if prep_token.lemma_ == "than":
                         prep_token = prep_token.head
+                    # Case: from [tick] to [tick]
+                    if prep_token.lemma_ == "to" and prep_token.head.lemma_ == "from":
+                        prep_token = prep_token.head
                     std_prep = get_std_axis(prep_token.lemma_)
                     if std_prep is not None:
                         v_token = prep_token.head
