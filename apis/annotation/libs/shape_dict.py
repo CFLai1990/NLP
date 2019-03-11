@@ -19,6 +19,7 @@ SHAPE_STANDARD = [
 SHAPE_FULL = {
     # line
     'line': 0,
+    'polyline': 0,
     # circle
     'circle': 1,
     'point': 1,
