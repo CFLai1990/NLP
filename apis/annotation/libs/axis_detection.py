@@ -18,7 +18,7 @@ def infer_axis(doc, entity_dict, axis_list):
         if not (axis_info["title"]["mentioned"] or axis_info["mentioned"]):
             continue
         # the axis title or ticks have been mentioned
-        axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
+        axis_id, axis_data, axis_label, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
         title_to_entities = {}
         # infer the entities via the axis title
         if axis_info["title"]["existed"] and axis_info["title"]["mentioned"]:
@@ -29,6 +29,7 @@ def infer_axis(doc, entity_dict, axis_list):
             title_entities, title_signs, title_to_entities = infer_titles(doc, title_locations)
             # Pack the results whether or not the ticks have been mentioned
             pack_entity_dict_by_title(doc, entity_dict, title_entities, title_signs, {
+                "label": axis_label,
                 "title": axis_title,
                 "unit": axis_unit,
                 "ticks": []
@@ -42,7 +43,7 @@ def infer_axis(doc, entity_dict, axis_list):
         if not axis_info["mentioned"]:
             continue
         # the axis has been mentioned
-        axis_id, axis_data, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
+        axis_id, axis_data, axis_label, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
@@ -68,6 +69,7 @@ def infer_axis(doc, entity_dict, axis_list):
                     for _id, entities_loc in enumerate(entities_by_location):
                         if entities_loc:
                             tick_entities.append({
+                                "label": axis_label,
                                 "title": axis_title,
                                 "unit": axis_unit,
                                 "tick_texts": [tick_result["text"]],
@@ -92,12 +94,13 @@ def infer_axis(doc, entity_dict, axis_list):
                                     tick_entity["locations"].append(tick_location)
                                 else:
                                     tick_entities.append({
-                                        "title": tick_entity["title"],
-                                        "unit": tick_entity["unit"],
+                                        "label": tick_entity.get("label"),
+                                        "title": tick_entity.get("title"),
+                                        "unit": tick_entity.get("unit"),
                                         "tick_texts": [tick_text],
-                                        "entities": tick_entity["entities"],
-                                        "signs": tick_entity["signs"],
-                                        "relation": tick_entity["relation"],
+                                        "entities": tick_entity.get("entities"),
+                                        "signs": tick_entity.get("signs"),
+                                        "relation": tick_entity.get("relation"),
                                         "locations": [tick_location]
                                         })
                                 break
@@ -111,6 +114,7 @@ def extract_axis_info(axis_info, axis_list):
     """Extract the axis information from the data structure"""
     axis_id = axis_info["id"]
     axis_data = axis_list[axis_id]
+    axis_label = axis_data.get("label")
     axis_title = None
     axis_unit = None
     if axis_info["unit"]["existed"]:
@@ -119,7 +123,7 @@ def extract_axis_info(axis_info, axis_list):
     if axis_info["title"]["existed"]:
         axis_title = axis_data["title"]["text"]
         # axis_title = ' '.join(axis_data["title"]["lemma"])
-    return axis_id, axis_data, axis_title, axis_unit
+    return axis_id, axis_data, axis_label, axis_title, axis_unit
 
 def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
     """Pack the entity dict by the titles"""
@@ -143,17 +147,18 @@ def pack_entity_dict_by_title(doc, entity_dict, entities, signs, state):
 
 def pack_entity_dict_by_tick(doc, entity_dict, tick_entity):
     """Pack the entity dict by the ticks"""
-    entities = tick_entity["entities"]
-    signs = tick_entity["signs"]
+    entities = tick_entity.get("entities")
+    signs = tick_entity.get("signs")
     for _id, e_token_index in enumerate(entities):
         e_axis_state = {
-            "title": tick_entity["title"],
-            "unit": tick_entity["unit"],
+            "label": tick_entity.get("label"),
+            "title": tick_entity.get("title"),
+            "unit": tick_entity.get("unit"),
             "sign": True,
         }
         e_tick_state = {
-            "values": tick_entity["tick_texts"],
-            "relation": tick_entity["relation"],
+            "values": tick_entity.get("tick_texts"),
+            "relation": tick_entity.get("relation"),
             "sign": signs[_id]
         }
         entity_id = 'entity_' + str(e_token_index)
@@ -194,6 +199,9 @@ def search_for_axes(doc, axis_list):
     axes_info = []
     for axis_id, axis in enumerate(axis_list):
         # whether the axis title has been mentioned
+        axis_label = None
+        if axis.get("label") is not None:
+            axis_label = axis.get("label")
         title_mentioned = False
         title_pos = None
         title_existed = False
@@ -243,7 +251,8 @@ def search_for_axes(doc, axis_list):
                 "existed": ticks_existed,
                 "mentioned": ticks_mentioned,
                 "data": ticks
-            }
+            },
+            "label": axis_label
         })
         mentioned = mentioned or axis_mentioned
     return mentioned, axes_info

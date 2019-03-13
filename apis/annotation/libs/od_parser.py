@@ -134,12 +134,14 @@ class ODParser:
             if data.get("axes") is not None:
                 axes = []
                 for axis in data["axes"]:
-                    axis_title, axis_unit = self.parse_axis_label(axis.get("label"))
+                    axis_label = axis.get("label")
+                    axis_title, axis_unit = self.parse_axis_label(axis_label)
                     axis_ticks = self.parse_axis_ticks(axis.get("ticks"))
                     axes.append({
                         "title": axis_title,
                         "unit": axis_unit,
-                        "ticks": axis_ticks
+                        "ticks": axis_ticks,
+                        "label": axis_label
                     })
                 results["axes"] = axes
             # Parse the legends
