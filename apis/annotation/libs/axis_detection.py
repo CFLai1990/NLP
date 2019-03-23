@@ -43,8 +43,8 @@ def infer_axis(doc, entity_dict, axis_list):
         if not axis_info["mentioned"]:
             continue
         # the axis has been mentioned
-        print(axis_info)
         axis_id, axis_data, axis_label, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
+        print(axis_id, axis_data, axis_label, axis_title, axis_unit, title_to_entities_dict)
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
