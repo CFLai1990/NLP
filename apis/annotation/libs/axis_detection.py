@@ -431,18 +431,22 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                                     v_token = v_token.head
                                 if v_token.dep_ == "amod":
                                     v_token = v_token.head
+                                print(v_token.lemma_)
                                 if v_token.dep_ == "attr" and v_token.head.pos_ == "VERB":
                                     v_token = v_token.head.head
+                                print(v_token.lemma_)
                                 if v_token.dep_ == "pobj":
                                     v_token = v_token.head.head
                                     if v_token.dep_ == "acomp":
                                         v_token = v_token.head
+                                print(v_token.lemma_)
                                 if v_token.dep_ == "acomp":
                                     v_token = v_token.head
                                 if v_token.dep_ == "dobj":
                                     v_token = v_token.head
                                 get_other_title(title_to_entities_all, other_title, v_token.i)
                         # Case: [verb] [prep] [tick]
+                        print("final v_token: ", v_token.lemma_)
                         if v_token is not None and v_token.pos_ == "VERB":
                             neg_sign = get_negation(v_token)
                         # Case: [entities] [prep] [tick] and [entities] [prep] [than] [tick]
