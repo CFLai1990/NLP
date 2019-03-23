@@ -36,8 +36,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 })
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
-        title_to_entities_all.update(title_to_entities)
-    print("title_to_entities: ", title_to_entities_all)
+        title_to_entities_all.update(title_to_entities)        
     # Step 2: Get all the ticks mentioned
     for axis_info in axes_info:
         # the axis has not been mentioned
@@ -472,12 +471,10 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                                         for grand_grand_child in grand_child.children:
                                             if grand_grand_child.dep_ == "pobj":
                                                 child_location = grand_grand_child.i
-                                                print("pobj location: ", child_location)
                                                 pobj_found = True
                                                 break
                                         if pobj_found:
                                             break
-                        print(title_to_entities)
                         if child_location is not None:
                             if title_to_entities.get(child_location) is not None:
                                 tick_entities = title_to_entities[child_location]
