@@ -37,6 +37,7 @@ def infer_axis(doc, entity_dict, axis_list):
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
         title_to_entities_all.update(title_to_entities)
+    print("title_to_entities: ", title_to_entities_all)
     # Step 2: Get all the ticks mentioned
     for axis_info in axes_info:
         # the axis has not been mentioned
@@ -44,7 +45,6 @@ def infer_axis(doc, entity_dict, axis_list):
             continue
         # the axis has been mentioned
         axis_id, axis_data, axis_label, axis_title, axis_unit = extract_axis_info(axis_info, axis_list)
-        print(axis_id, axis_data, axis_label, axis_title, axis_unit, title_to_entities_dict)
         title_to_entities = {}
         if axis_title is not None:
             title_to_entities = title_to_entities_dict.get(axis_title)
