@@ -36,7 +36,7 @@ def infer_axis(doc, entity_dict, axis_list):
                 })
         if axis_title is not None:
             title_to_entities_dict[axis_title] = title_to_entities
-        title_to_entities_all.update(title_to_entities)
+        title_to_entities_all.update(title_to_entities)        
     # Step 2: Get all the ticks mentioned
     for axis_info in axes_info:
         # the axis has not been mentioned
@@ -59,7 +59,8 @@ def infer_axis(doc, entity_dict, axis_list):
                 tick_tokens = []
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
-                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, title_to_entities_all, unit_data)
+                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, \
+                    title_to_entities_all, unit_data)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
@@ -296,11 +297,12 @@ def infer_titles(doc, title_locations):
             # Case ~2: [title] [prep] [subject]
             # Example: temperature of Beijing
             if child.dep_ == "prep" and child.lemma_ == "of":
-                for grand_child in child.children:
-                    if grand_child.dep_ == "pobj":
-                        entities, signs = infer_entities(grand_child, True)
-                        location_entities.extend(entities)
-                        location_signs.extend(signs)
+                if child.children:
+                    for grand_child in child.children:
+                        if grand_child.dep_ == "pobj":
+                            entities, signs = infer_entities(grand_child, True)
+                            location_entities.extend(entities)
+                            location_signs.extend(signs)
             # Case ~3: [subject] ['s] [title]
             # Example: Beijing's temperature
             if child.dep_ == "poss":
@@ -456,15 +458,34 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
                         v_token = v_token.head
                     for child in v_token.children:
+                        child_location = None
                         if child.dep_ == "nsubj":
                             # The entry token for entities
                             child_location = child.i
-                            if title_to_entities.get(child_location) is None:
-                                tick_entities, tick_signs = infer_entities(child, True)
-                            else:
+                        elif child.dep_ == "attr":
+                            child_location = child.i
+                            if child.children:
+                                for grand_child in child.children:
+                                    if grand_child.dep_ == "prep":
+                                        pobj_found = False
+                                        for grand_grand_child in grand_child.children:
+                                            if grand_grand_child.dep_ == "pobj":
+                                                child_location = grand_grand_child.i
+                                                pobj_found = True
+                                                break
+                                        if pobj_found:
+                                            break
+                        if child_location is not None:
+                            if title_to_entities.get(child_location) is not None:
                                 tick_entities = title_to_entities[child_location]
                                 for tick_entity in tick_entities:
                                     tick_signs.append(True)
+                            elif title_to_entities_all.get(child_location) is not None:
+                                tick_entities = title_to_entities_all[child_location]
+                                for tick_entity in tick_entities:
+                                    tick_signs.append(True)
+                            else:
+                                tick_entities, tick_signs = infer_entities(child, True)
                 else:
                     if other_title["found"]:
                         v_location = other_title["location"]
