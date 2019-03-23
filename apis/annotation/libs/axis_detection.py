@@ -470,11 +470,12 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                                         for grand_grand_child in grand_child.children:
                                             if grand_grand_child.dep_ == "pobj":
                                                 child_location = grand_grand_child.i
-                                                print("pobj: ", grand_grand_child.lemma_)
+                                                print("pobj location: ", child_location)
                                                 pobj_found = True
                                                 break
                                         if pobj_found:
                                             break
+                        print(title_to_entities)
                         if child_location is not None:
                             if title_to_entities.get(child_location) is None:
                                 tick_entities, tick_signs = infer_entities(child, True)
