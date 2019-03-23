@@ -1,4 +1,5 @@
 """The pipeline for Natural Language Processing"""
+import traceback
 from .label_detection import infer_label
 from .shape_detection import infer_shape
 from .color_detection import infer_color
@@ -20,12 +21,16 @@ class NLPPipeline:
         # if od_data is not None:
         #     infer_label(sentence, labels, od_data["labels"])
         # Get the entities described by their visual features
-        entities = {}
-        infer_shape(doc, entities)
-        infer_label(doc, entities, od_data["labels"])
-        infer_legend(doc, entities, od_data["legends"])
-        infer_color(doc, entities)
-        infer_size(doc, entities)
-        infer_loc(doc, entities)
-        infer_axis(doc, entities, od_data["axes"])
+        try:
+            entities = {}
+            infer_shape(doc, entities)
+            infer_label(doc, entities, od_data["labels"])
+            infer_legend(doc, entities, od_data["legends"])
+            infer_color(doc, entities)
+            infer_size(doc, entities)
+            infer_loc(doc, entities)
+            infer_axis(doc, entities, od_data["axes"])
+        except Exception as e:
+            print(repr(e))
+            traceback.print_exc()
         return entities
