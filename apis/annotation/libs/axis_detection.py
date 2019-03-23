@@ -466,8 +466,14 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             if child.children:
                                 for grand_child in child.children:
                                     if grand_child.dep_ == "prep":
-                                        print("type: ", type(grand_child.children))
-                                        child_location = grand_child.children[0].i
+                                        pobj_found = False
+                                        for grand_grand_child in grand_child.children:
+                                            if grand_grand_child.dep_ == "pobj":
+                                                child_location = grand_grand_child.i
+                                                pobj_found = True
+                                                break
+                                        if pobj_found:
+                                            break
                         if child_location is not None:
                             if title_to_entities.get(child_location) is None:
                                 tick_entities, tick_signs = infer_entities(child, True)
