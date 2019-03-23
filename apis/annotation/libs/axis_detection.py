@@ -296,11 +296,12 @@ def infer_titles(doc, title_locations):
             # Case ~2: [title] [prep] [subject]
             # Example: temperature of Beijing
             if child.dep_ == "prep" and child.lemma_ == "of":
-                for grand_child in child.children:
-                    if grand_child.dep_ == "pobj":
-                        entities, signs = infer_entities(grand_child, True)
-                        location_entities.extend(entities)
-                        location_signs.extend(signs)
+                if child.children:
+                    for grand_child in child.children:
+                        if grand_child.dep_ == "pobj":
+                            entities, signs = infer_entities(grand_child, True)
+                            location_entities.extend(entities)
+                            location_signs.extend(signs)
             # Case ~3: [subject] ['s] [title]
             # Example: Beijing's temperature
             if child.dep_ == "poss":
@@ -460,9 +461,17 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                     while v_token.dep_ == "xcomp" and v_token.head.pos_ == "VERB":
                         v_token = v_token.head
                     for child in v_token.children:
+                        child_location = None
                         if child.dep_ == "nsubj":
                             # The entry token for entities
                             child_location = child.i
+                        elif child.dep_ == "attr":
+                            child_location = child.i
+                            if child.children:
+                                for grand_child in child.children:
+                                    if grand_child.dep_ == "prep":
+                                        child_location = grand_child.children[0].i
+                        if child_location is not None:
                             if title_to_entities.get(child_location) is None:
                                 tick_entities, tick_signs = infer_entities(child, True)
                             else:
