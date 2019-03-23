@@ -470,6 +470,7 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                             if child.children:
                                 for grand_child in child.children:
                                     if grand_child.dep_ == "prep":
+                                        print("type: ", type(grand_child))
                                         child_location = grand_child.children[0].i
                         if child_location is not None:
                             if title_to_entities.get(child_location) is None:
