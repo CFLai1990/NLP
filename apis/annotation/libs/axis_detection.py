@@ -60,7 +60,8 @@ def infer_axis(doc, entity_dict, axis_list):
                 tick_tokens = []
                 for location in tick_info["locations"]:
                     tick_tokens.append(doc[location + tick_data["root"]])
-                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, title_to_entities_all, unit_data)
+                tick_result = infer_ticks(tick_tokens, tick_data["text"], title_to_entities, \
+                    title_to_entities_all, unit_data)
                 tick_results.append(tick_result)
             # pack the results in tick_entities
             tick_entities = []
@@ -478,12 +479,16 @@ def infer_ticks(tick_tokens, tick_text, title_to_entities, title_to_entities_all
                                             break
                         print(title_to_entities)
                         if child_location is not None:
-                            if title_to_entities.get(child_location) is None:
-                                tick_entities, tick_signs = infer_entities(child, True)
-                            else:
+                            if title_to_entities.get(child_location) is not None:
                                 tick_entities = title_to_entities[child_location]
                                 for tick_entity in tick_entities:
                                     tick_signs.append(True)
+                            elif title_to_entities_all.get(child_location) is not None:
+                                tick_entities = title_to_entities_all[child_location]
+                                for tick_entity in tick_entities:
+                                    tick_signs.append(True)
+                            else:
+                                tick_entities, tick_signs = infer_entities(child, True)
                 else:
                     if other_title["found"]:
                         v_location = other_title["location"]
