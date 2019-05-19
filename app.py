@@ -115,4 +115,4 @@ if __name__ == '__main__':
     if VERSION == 'dev2':
         PORTNUM = 2017
     PORT = int(os.environ.get('PORT', PORTNUM))
-    socketio.run(app, debug=False, host='0.0.0.0', port=PORT)
+    socketio.run(app, debug=True, host='0.0.0.0', port=PORT)
