@@ -25,13 +25,13 @@ LOCATION_FULL = {
     # middle
     'middle': 0,
     # y_location - top
-    'top': 3,
+    'top': 1,
     # y_location - top
-    'bottom': 4,
+    'bottom': 2,
     # x_location - left
-    'left': 5,
-    'leftmost': 5,
+    'left': 3,
+    'leftmost': 3,
     # x_location - right
-    'right': 6,
-    'rightmost': 6,
+    'right': 4,
+    'rightmost': 4,
 }
