@@ -2,7 +2,7 @@
 import spacy
 from .__settings__ import APIs, NAMESPACE, PACKAGE, OUTPUT_DIR, EVENT_DICT
 
-SPACY = spacy.load('en_coref')
+SPACY = spacy.load('en')#en_coref en
 
 class THISAPIs(APIs):
     """The wrapper for all default APIs"""
