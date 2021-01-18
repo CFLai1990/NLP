@@ -3,3 +3,5 @@
 env
 venv
 *.cmd
+files/
+nohup.out
