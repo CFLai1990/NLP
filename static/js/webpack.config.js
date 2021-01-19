@@ -1,5 +1,7 @@
+const path = require('path');
+
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
   entry: {
     main: __dirname + '/dev/index.js'
   },
@@ -10,7 +12,7 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.m?js$/,
+      test: /\.(js)$/,
       exclude: /(node_modules|bower_components)/,
       use: {
         loader: 'babel-loader',
@@ -19,5 +21,11 @@ module.exports = {
         }
       }
     }]
+  },
+  resolve: {
+    extensions: ['*', '.js']
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, './public'),
   }
 }

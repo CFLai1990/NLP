@@ -4,7 +4,7 @@ import MSocket from './msgsocket.js'
   'NLP': get the nlp result of the text
 */
 const MESSAGE = 'NLP'
-const MACHINE = 'dl'
+const MACHINE = 'local'
 // const VERSION = 'dev2'
 // const VERSION = 'dev'
 const VERSION = 'public'

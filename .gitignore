@@ -3,5 +3,6 @@
 env
 venv
 *.cmd
+static/js/node_modules
 files/
 nohup.out

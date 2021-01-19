@@ -1,0 +1,35 @@
+{
+  "name": "cf_nlp",
+  "version": "1.0.0",
+  "description": "This is a simple nlp platform.",
+  "main": "plugins.js",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "socket.io-client": "^3.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "webpack": "^5.15.0",
+    "webpack-cli": "^4.3.1"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "Chufan Lai",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CFLai1990/NLP.git"
+  },
+  "keywords": [
+    "Visual Description",
+    "Natural Language Processing"
+  ],
+  "bugs": {
+    "url": "https://github.com/CFLai1990/NLP/issues"
+  },
+  "homepage": "https://github.com/CFLai1990/NLP#readme"
+}
