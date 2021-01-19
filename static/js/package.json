@@ -2,7 +2,7 @@
   "name": "cf_nlp",
   "version": "1.0.0",
   "description": "This is a simple nlp platform.",
-  "main": "plugins.js",
+  "main": "public/index.js",
   "dependencies": {
     "jquery": "^3.3.1",
     "socket.io-client": "^3.1.0"
